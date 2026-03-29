@@ -321,43 +321,81 @@ export const ROLE_REDIRECTS = {
 }
 
 // ── CSV İmport: Ders adı → slug eşleştirme ───────────────────
+// Tüm key'ler normalize (büyük harf + Türkçe karakter normalize) olarak tutulur
 export const DERS_SLUG_MAP = {
-  'TYT|Paragraf':                     'turkce-paragraf',
-  'TYT|Dil Bilgisi':                  'turkce-dilbilgisi',
-  'TYT|Anlam Bilgisi':                'turkce-anlambilgisi',
-  'TYT|Temel Matematik':              'tyt-mat-temel',
-  'TYT|Problemler':                   'tyt-mat-problem',
-  'TYT|Geometri':                     'tyt-mat-geometri',
-  'TYT|Fizik':                        'tyt-fizik',
-  'TYT|Kimya':                        'tyt-kimya',
-  'TYT|Biyoloji':                     'tyt-biyoloji',
-  'TYT|Tarih':                        'tyt-tarih',
-  'TYT|Coğrafya':                     'tyt-cografya',
-  'TYT|Felsefe':                      'tyt-felsefe',
-  'TYT|Din Kültürü ve Ahlak Bilgisi': 'tyt-din',
-  'TYT|Din Kültürü':                  'tyt-din',
-  'AYT|Fizik':                        'ayt-fizik',
-  'AYT|Kimya':                        'ayt-kimya',
-  'AYT|Biyoloji':                     'ayt-biyoloji',
-  'AYT|Matematik':                    'ayt-mat-matematik',
-  'AYT|Geometri':                     'ayt-mat-geometri',
-  'AYT|Türk Dili ve Edebiyatı':       'ayt-edebiyat',
-  'AYT|Edebiyat':                     'ayt-edebiyat',
-  'AYT|Tarih-1':                      'ayt-tarih1',
-  'AYT|Coğrafya-1':                   'ayt-cografya1',
-  'AYT|Tarih-2':                      'ayt-tarih2',
-  'AYT|Coğrafya-2':                   'ayt-cografya2',
-  'AYT|Felsefe':                      'ayt-felsefe',
-  'AYT|Psikoloji':                    'ayt-psikoloji',
-  'AYT|Sosyoloji':                    'ayt-sosyoloji',
-  'AYT|Mantık':                       'ayt-mantik',
-  'AYT|Din Kültürü ve Ahlak Bilgisi': 'ayt-din',
-  'AYT|Din Kültürü':                  'ayt-din',
+  // TYT Türkçe
+  'TYT|PARAGRAF':                         'turkce-paragraf',
+  'TYT|DIL BILGISI':                      'turkce-dilbilgisi',
+  'TYT|ANLAM BILGISI':                    'turkce-anlambilgisi',
+  'TYT|TURKCE':                           'turkce-paragraf',   // bölüm bazlı fallback
+  // TYT Matematik
+  'TYT|TEMEL MATEMATIK':                  'tyt-mat-temel',
+  'TYT|PROBLEMLER':                       'tyt-mat-problem',
+  'TYT|GEOMETRI':                         'tyt-mat-geometri',
+  'TYT|MATEMATIK':                        'tyt-mat-temel',
+  // TYT Fen
+  'TYT|FIZIK':                            'tyt-fizik',
+  'TYT|KIMYA':                            'tyt-kimya',
+  'TYT|BIYOLOJI':                         'tyt-biyoloji',
+  // TYT Sosyal
+  'TYT|TARIH':                            'tyt-tarih',
+  'TYT|COGRAFYA':                         'tyt-cografya',
+  'TYT|FELSEFE':                          'tyt-felsefe',
+  'TYT|DIN KULTURU VE AHLAK BILGISI':     'tyt-din',
+  'TYT|DIN KULTURU':                      'tyt-din',
+  'TYT|DIN':                              'tyt-din',
+  // AYT Fen
+  'AYT|FIZIK':                            'ayt-fizik',
+  'AYT|KIMYA':                            'ayt-kimya',
+  'AYT|BIYOLOJI':                         'ayt-biyoloji',
+  // AYT Matematik
+  'AYT|MATEMATIK':                        'ayt-mat-matematik',
+  'AYT|GEOMETRI':                         'ayt-mat-geometri',
+  // AYT Edebiyat-Sosyal 1
+  'AYT|TURK DILI VE EDEBIYATI':           'ayt-edebiyat',
+  'AYT|EDEBIYAT':                         'ayt-edebiyat',
+  'AYT|TURKCE':                           'ayt-edebiyat',     // BÖLÜM=TÜRKÇE, KATEGORİ=AYT
+  'AYT|PARAGRAF':                         'ayt-edebiyat',     // DERS=PARAGRAF, KATEGORİ=AYT
+  'AYT|DIL BILGISI':                      'ayt-edebiyat',
+  'AYT|ANLAM BILGISI':                    'ayt-edebiyat',
+  'AYT|TARIH-1':                          'ayt-tarih1',
+  'AYT|TARIH 1':                          'ayt-tarih1',
+  'AYT|COGRAFYA-1':                       'ayt-cografya1',
+  'AYT|COGRAFYA 1':                       'ayt-cografya1',
+  // AYT Sosyal 2
+  'AYT|TARIH-2':                          'ayt-tarih2',
+  'AYT|TARIH 2':                          'ayt-tarih2',
+  'AYT|COGRAFYA-2':                       'ayt-cografya2',
+  'AYT|COGRAFYA 2':                       'ayt-cografya2',
+  'AYT|FELSEFE':                          'ayt-felsefe',
+  'AYT|PSIKOLOJI':                        'ayt-psikoloji',
+  'AYT|SOSYOLOJI':                        'ayt-sosyoloji',
+  'AYT|MANTIK':                           'ayt-mantik',
+  'AYT|DIN KULTURU VE AHLAK BILGISI':     'ayt-din',
+  'AYT|DIN KULTURU':                      'ayt-din',
+  'AYT|DIN':                              'ayt-din',
 }
 
-export function csvRowToSlug(kategori, ders) {
-  const key = `${(kategori || '').trim().toUpperCase()}|${(ders || '').trim()}`
-  return DERS_SLUG_MAP[key] || null
+// Türkçe karakterleri ASCII'ye normalize et: Ş→S, Ğ→G, İ→I, Ü→U, Ö→O, Ç→C
+function normalizeTR(str) {
+  return (str || '')
+    .toUpperCase()
+    .replace(/Ş/g, 'S').replace(/Ğ/g, 'G').replace(/İ/g, 'I').replace(/I/g, 'I')
+    .replace(/Ü/g, 'U').replace(/Ö/g, 'O').replace(/Ç/g, 'C')
+    .trim()
+}
+
+export function csvRowToSlug(kategori, ders, bolum) {
+  // 1. Önce KATEGORİ|DERS ile dene
+  const k = normalizeTR(kategori)
+  const d = normalizeTR(ders)
+  const b = normalizeTR(bolum)
+  const key1 = `${k}|${d}`
+  if (DERS_SLUG_MAP[key1]) return DERS_SLUG_MAP[key1]
+  // 2. KATEGORİ|BÖLÜM ile fallback
+  const key2 = `${k}|${b}`
+  if (DERS_SLUG_MAP[key2]) return DERS_SLUG_MAP[key2]
+  return null
 }
 
 // ── CSV Metni Parse Et ────────────────────────────────────────
@@ -398,7 +436,7 @@ export function parseFlashcardCSV(text) {
       id: `csv_${ts}_${i}`, baslik, q: soru,
       a: aciklama || soru,
       kategori: kategori.toUpperCase(), bolum, ders,
-      slug: csvRowToSlug(kategori, ders),
+      slug: csvRowToSlug(kategori, ders, bolum),
     })
   })
   return cards
