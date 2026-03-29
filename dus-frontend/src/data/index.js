@@ -453,6 +453,8 @@ export function saveImportedCards(cardsBySlug) {
       merged[slug] = [...(merged[slug] || []), ...newCards]
     })
     localStorage.setItem(LS_KEY, JSON.stringify(merged))
+    // CustomerDecks bileşenini aynı sekmede yenile
+    window.dispatchEvent(new Event('ayttyt-cards-updated'))
     return Object.values(cardsBySlug).flat().length
   } catch { return 0 }
 }
@@ -463,3 +465,72 @@ export function getAllImportedCards() {
 }
 
 export function clearImportedCards() { localStorage.removeItem(LS_KEY) }
+
+// ── Admin içerik yönetimi için ortak localStorage anahtarı ────
+export const LS_ADMIN_CARDS_KEY = 'ayttyt_admin_cards_v1'
+
+// ── slug → görünen ders adı ───────────────────────────────────
+const SLUG_TO_DISPLAY = {
+  'turkce-paragraf':      'Türkçe (TYT) / Paragraf',
+  'turkce-dilbilgisi':    'Türkçe (TYT) / Dil Bilgisi',
+  'turkce-anlambilgisi':  'Türkçe (TYT) / Anlam Bilgisi',
+  'tyt-mat-temel':        'Matematik (TYT) / Temel Matematik',
+  'tyt-mat-problem':      'Matematik (TYT) / Problemler',
+  'tyt-mat-geometri':     'Matematik (TYT) / Geometri',
+  'tyt-fizik':            'Fen Bil. (TYT) / Fizik',
+  'tyt-kimya':            'Fen Bil. (TYT) / Kimya',
+  'tyt-biyoloji':         'Fen Bil. (TYT) / Biyoloji',
+  'tyt-tarih':            'Sosyal (TYT) / Tarih',
+  'tyt-cografya':         'Sosyal (TYT) / Coğrafya',
+  'tyt-felsefe':          'Sosyal (TYT) / Felsefe',
+  'tyt-din':              'Sosyal (TYT) / Din Kültürü',
+  'ayt-fizik':            'Fen Bil. (AYT) / Fizik',
+  'ayt-kimya':            'Fen Bil. (AYT) / Kimya',
+  'ayt-biyoloji':         'Fen Bil. (AYT) / Biyoloji',
+  'ayt-mat-matematik':    'Matematik (AYT) / Matematik',
+  'ayt-mat-geometri':     'Matematik (AYT) / Geometri',
+  'ayt-edebiyat':         'Edebiyat-Sosyal 1 (AYT) / Edebiyat',
+  'ayt-tarih1':           'Edebiyat-Sosyal 1 (AYT) / Tarih-1',
+  'ayt-cografya1':        'Edebiyat-Sosyal 1 (AYT) / Coğrafya-1',
+  'ayt-tarih2':           'Sosyal Bil. 2 (AYT) / Tarih-2',
+  'ayt-cografya2':        'Sosyal Bil. 2 (AYT) / Coğrafya-2',
+  'ayt-felsefe':          'Sosyal Bil. 2 (AYT) / Felsefe',
+  'ayt-psikoloji':        'Sosyal Bil. 2 (AYT) / Psikoloji',
+  'ayt-sosyoloji':        'Sosyal Bil. 2 (AYT) / Sosyoloji',
+  'ayt-mantik':           'Sosyal Bil. 2 (AYT) / Mantık',
+  'ayt-din':              'Sosyal Bil. 2 (AYT) / Din Kültürü',
+}
+
+/**
+ * CSV'den import edilen kartları AdminContent localStorage'ına da ekle.
+ * matchedCards → parseFlashcardCSV() çıktısından slug'ı olan satırlar.
+ */
+export function saveImportedCardsToAdmin(matchedCards) {
+  try {
+    const existing = JSON.parse(localStorage.getItem(LS_ADMIN_CARDS_KEY) || '[]')
+    const existingIds = new Set(existing.map(c => String(c.id)))
+    const today = new Date().toISOString().split('T')[0]
+    const newCards = matchedCards
+      .filter(c => c.slug && !existingIds.has(String(c.id)))
+      .map(c => ({
+        id:           c.id,
+        question:     c.q,
+        answer:       c.a,
+        card_type:    'qa',
+        status:       'published',
+        course_name:  SLUG_TO_DISPLAY[c.slug] || `${c.kategori} / ${c.bolum || c.ders}`,
+        created_at:   today,
+        source:       'csv',
+        slug:         c.slug,
+      }))
+    if (newCards.length) {
+      localStorage.setItem(
+        LS_ADMIN_CARDS_KEY,
+        JSON.stringify([...existing, ...newCards])
+      )
+      // AdminContent bileşenini aynı sekmede yenile
+      window.dispatchEvent(new Event('ayttyt-cards-updated'))
+    }
+    return newCards.length
+  } catch { return 0 }
+}

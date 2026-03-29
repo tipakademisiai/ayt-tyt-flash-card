@@ -4,7 +4,7 @@ import { libraryAPI, imageCardsAPI, coursesAPI, cardsAPI } from '../../api/clien
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import styles from '../../styles/shared.module.css'
 import toast from 'react-hot-toast'
-import { parseFlashcardCSV, saveImportedCards } from '../../data'
+import { parseFlashcardCSV, saveImportedCards, saveImportedCardsToAdmin } from '../../data'
 
 const FILE_TYPE_ICONS  = { pdf:'📄', excel:'📊', image:'🖼️', word:'📝', other:'📎' }
 const FILE_TYPE_COLORS = {
@@ -148,12 +148,18 @@ function DocumentsTab({ courses }) {
     const matched   = csvParsed.filter(c => c.slug)
     const unmatched = csvParsed.filter(c => !c.slug)
     if (!matched.length) { toast.error('Eşleşen ders bulunamadı. KATEGORİ ve DERS sütunlarını kontrol et.'); return }
+
+    // 1) Kullanıcı deste ekranı için (CustomerDecks) — slug bazlı
     const bySlug = {}
     matched.forEach(c => {
       if (!bySlug[c.slug]) bySlug[c.slug] = []
       bySlug[c.slug].push({ id:c.id, q:c.q, a:c.a, baslik:c.baslik })
     })
     const saved = saveImportedCards(bySlug)
+
+    // 2) Admin içerik yönetimi için — tablo formatında
+    saveImportedCardsToAdmin(matched)
+
     setCsvOpen(false)
     setCsvParsed([])
     setCsvFilter('all')

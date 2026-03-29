@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { ThemeToggle } from '../../components/shared'
 import { TYT_BOLUMLER, AYT_BOLUMLER, DECK_CARDS, SRS_COLORS, getImportedCards } from '../../data'
 import { COURSE_ICON_MAP } from '../../data/courseIcons'
@@ -233,6 +233,14 @@ export default function CustomerDecks() {
   const [activeCards, setActiveCards]           = useState([])
   const [deckName, setDeckName]                 = useState('')
   const [result, setResult]                     = useState(null)
+
+  // localStorage'dan kart sayıları değiştiğinde yenile (CSV import sonrası)
+  const [refreshSeed, setRefreshSeed] = useState(0)
+  useEffect(() => {
+    const refresh = () => setRefreshSeed(s => s + 1)
+    window.addEventListener('ayttyt-cards-updated', refresh)
+    return () => window.removeEventListener('ayttyt-cards-updated', refresh)
+  }, [])
 
   const startDeck = useCallback((cards, name) => {
     if (!cards || cards.length === 0) {

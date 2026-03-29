@@ -1,12 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { PageTopbar, KpiCard, Badge, FilterBar, Modal, ConfirmModal } from '../../components/shared'
 import { coursesAPI } from '../../api/client'
 import { useQuery } from '@tanstack/react-query'
 import styles from '../../styles/shared.module.css'
 import toast from 'react-hot-toast'
+import { LS_ADMIN_CARDS_KEY } from '../../data'
 
 // ── localStorage yardımcıları ─────────────────────────────────
-const LS_CARDS_KEY = 'ayttyt_admin_cards_v1'
+const LS_CARDS_KEY = LS_ADMIN_CARDS_KEY   // 'ayttyt_admin_cards_v1'
 function loadLocalCards() {
   try { const s = localStorage.getItem(LS_CARDS_KEY); return s ? JSON.parse(s) : null }
   catch { return null }
@@ -59,12 +60,29 @@ export default function AdminContent() {
   const [form,        setForm]        = useState(EMPTY_FORM)
 
   // ── YEREL KART DURUMU (localStorage kalıcı) ───────────────────
-  const [allCards, setAllCards] = useState(() => loadLocalCards() || MOCK_CARDS)
+  const [allCards, setAllCards] = useState(() => {
+    const stored = loadLocalCards()
+    if (stored) return stored
+    // İlk açılışta MOCK_CARDS'ı localStorage'a yaz (import merge için)
+    persistLocalCards(MOCK_CARDS)
+    return MOCK_CARDS
+  })
 
   const saveCards = (updated) => {
     setAllCards(updated)
     persistLocalCards(updated)
   }
+
+  // ── CSV import sonrası otomatik yenile (aynı sekme) ───────────
+  useEffect(() => {
+    const onStorage = () => {
+      const fresh = loadLocalCards()
+      if (fresh) setAllCards(fresh)
+    }
+    // Aynı sekmede localStorage değişimini izle
+    window.addEventListener('ayttyt-cards-updated', onStorage)
+    return () => window.removeEventListener('ayttyt-cards-updated', onStorage)
+  }, [])
 
   // ── KURS LİSTESİ (backend veya mock) ──────────────────────────
   const { data: rawCourses, isError: coursesErr } = useQuery({
