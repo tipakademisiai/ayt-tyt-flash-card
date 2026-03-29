@@ -1,18 +1,18 @@
 import { ThemeToggle } from '../../components/shared'
 
 const COURSE_STATS = [
-  { name:'Periodontoloji', pct:78, color:'linear-gradient(90deg,#0088BB,#00AADD)' },
-  { name:'Endodonti',      pct:60, color:'linear-gradient(90deg,#0088BB,#00AADD)' },
-  { name:'Anatomi',        pct:65, color:'linear-gradient(90deg,#7C3AED,#A78BFA)' },
-  { name:'Ortodonti',      pct:38, color:'linear-gradient(90deg,#D97706,#F5C842)' },
-  { name:'Farmakoloji',    pct:20, color:'linear-gradient(90deg,#9D174D,#E05070)' },
-  { name:'Mikrobiyoloji',  pct:30, color:'linear-gradient(90deg,#E05070,#FF8090)' },
+  { name:'Türkçe',            pct:78, color:'linear-gradient(90deg,#0088BB,#00AADD)' },
+  { name:'AYT Matematik',     pct:60, color:'linear-gradient(90deg,#0088BB,#00AADD)' },
+  { name:'TYT Fen Bilimleri', pct:65, color:'linear-gradient(90deg,#7C3AED,#A78BFA)' },
+  { name:'Sosyal Bilimler',   pct:38, color:'linear-gradient(90deg,#D97706,#F5C842)' },
+  { name:'AYT Fen Bilimleri', pct:20, color:'linear-gradient(90deg,#9D174D,#E05070)' },
+  { name:'Edebiyat–Sosyal 1', pct:30, color:'linear-gradient(90deg,#E05070,#FF8090)' },
 ]
 
 const QUIZ_HISTORY = [
-  { name:'Periodontoloji', score:90, conf:4.2, cards:20, when:'Bugün',      scoreC:'#10B981' },
-  { name:'Anatomi',        score:67, conf:2.8, cards:18, when:'Dün',         scoreC:'#F5A020' },
-  { name:'Farmakoloji',    score:42, conf:1.9, cards:12, when:'2 gün önce',  scoreC:'#E05070' },
+  { name:'Türkçe',          score:90, conf:4.2, cards:20, when:'Bugün',      scoreC:'#10B981' },
+  { name:'TYT Matematik',   score:67, conf:2.8, cards:18, when:'Dün',         scoreC:'#F5A020' },
+  { name:'AYT Fen',         score:42, conf:1.9, cards:12, when:'2 gün önce',  scoreC:'#E05070' },
 ]
 
 export default function CustomerProgress() {
@@ -38,7 +38,7 @@ export default function CustomerProgress() {
         background:'rgba(245,200,66,.08)',border:'1px solid rgba(245,200,66,.18)'}}>
         <div style={{fontSize:22}}>📅</div>
         <div style={{flex:1}}>
-          <div style={{fontSize:9,fontWeight:700,letterSpacing:'.09em',textTransform:'uppercase',color:'#F5C842',marginBottom:2}}>DUS 2025 — Aralık</div>
+          <div style={{fontSize:9,fontWeight:700,letterSpacing:'.09em',textTransform:'uppercase',color:'#F5C842',marginBottom:2}}>AYT/TYT Sınavı</div>
           <div style={{fontSize:15,fontWeight:800,color:'var(--t1)'}}>127 gün kaldı</div>
           <div style={{fontSize:10,color:'var(--t3)',marginTop:2}}>Hedefe ulaşmak için günde 50 kart yeterli</div>
         </div>

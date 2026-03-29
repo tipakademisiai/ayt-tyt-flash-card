@@ -33,7 +33,7 @@ export default function CustomerShop() {
         background:'rgba(16,185,129,.1)',border:'1.5px solid rgba(16,185,129,.3)'}}>
         <div style={{fontSize:22}}>✅</div>
         <div style={{flex:1}}>
-          <div style={{fontSize:12,fontWeight:800,color:'#10B981',marginBottom:1}}>Mevcut Plan: DUS Pro</div>
+          <div style={{fontSize:12,fontWeight:800,color:'#10B981',marginBottom:1}}>Mevcut Plan: Pro</div>
           <div style={{fontSize:10,color:'var(--t3)'}}>₺499/ay · 28 Nisan 2026 yenilenir</div>
         </div>
         <div style={{fontSize:10,fontWeight:700,color:'#E05070',cursor:'pointer'}} onClick={() => toast('İptal işlemi...')}>İptal Et</div>

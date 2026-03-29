@@ -4,9 +4,9 @@ import styles from '../../styles/shared.module.css'
 import toast from 'react-hot-toast'
 
 const STUDY_CARDS = [
-  { q:'Periodontitis tedavisinde ilk basamak nedir?', a:'Başlangıç (Nedensel) Tedavi: SRP ve hasta motivasyonu.' },
-  { q:'Gingivitis ile periodontitis arasındaki temel fark?', a:'Gingivitiste kemik kaybı yoktur; periodontitiste periodontal ligament ve kemik etkilenir.' },
-  { q:'Periodontal cep nedir?', a:'Bağlantı epitelinin apikale migrasyonu ile oluşan sulkus derinleşmesidir (>3mm).' },
+  { q:'Paragrafta ana fikir nerede bulunur?', a:'Genellikle paragrafın başında veya sonunda yer alır; bazen tümüne yayılabilir.' },
+  { q:'Newton\'un 2. Hareket Yasası nedir?', a:'F = m × a; Net kuvvet, kütle ile ivmenin çarpımına eşittir.' },
+  { q:'Mitoz bölünmenin sonucunda kaç hücre oluşur?', a:'2 adet, genetik olarak özdeş diploid (2n) hücre.' },
 ]
 
 export default function TrainerStudy() {

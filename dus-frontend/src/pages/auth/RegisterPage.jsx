@@ -38,8 +38,8 @@ export default function RegisterPage() {
       <div className={styles.wrap}>
         <div className={styles.logoArea}>
           <div className={styles.logoIcon}><LogoSVG size={32} /></div>
-          <div className={styles.brandName}>dusakademisi<span className={styles.com}>.com</span></div>
-          <div className={styles.brandTag}>DUS · TUS · Yandal Hazırlık Platformu</div>
+          <div className={styles.brandName}>ayttytflash<span className={styles.com}>.com</span></div>
+          <div className={styles.brandTag}>AYT · TYT · YKS Hazırlık Platformu</div>
         </div>
         <div className={styles.loginCard}>
           <div className={styles.cardTitle}>Hesap Oluştur 🚀</div>

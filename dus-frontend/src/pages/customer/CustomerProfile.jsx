@@ -35,7 +35,7 @@ export default function CustomerProfile() {
           {user?.first_name?.[0]}{user?.last_name?.[0]}
         </div>
         <div style={{fontSize:16,fontWeight:800,color:'var(--t1)',marginBottom:2}}>{user?.full_name || 'Dr. Zeynep Şahin'}</div>
-        <div style={{fontSize:11,color:'var(--t3)',marginBottom:12}}>{user?.email} · DUS Pro</div>
+        <div style={{fontSize:11,color:'var(--t3)',marginBottom:12}}>{user?.email} · Pro Plan</div>
         <div style={{display:'flex',justifyContent:'center',gap:20,marginBottom:14}}>
           {[{v:'847',l:'Kart',c:'#00AADD'},{v:'12🔥',l:'Seri',c:'#F5C842'},{v:'%61',l:'Başarı',c:'#10B981'}].map((s,i) => (
             <div key={i} style={{textAlign:'center'}}>

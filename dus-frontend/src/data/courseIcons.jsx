@@ -1,11 +1,11 @@
-// SVG course icons for DUS Akademisi — 14 DUS müfredatı dersi
+// SVG course icons for AYT TYT Flash — TYT/AYT bölümleri
 
 const BASE = {
   width: 48, height: 48, viewBox: '0 0 48 48',
   fill: 'none', strokeLinecap: 'round', strokeLinejoin: 'round',
 }
 
-// ── Temel Bilimler ─────────────────────────────────────────────
+// ── TYT Bölümleri ──────────────────────────────────────────────
 
 export function AnatomyIcon({ color = 'currentColor', size = 48 }) {
   // Scissors: two rings top-left & top-right, crossing blades
@@ -95,7 +95,7 @@ export function PharmaIcon({ color = 'currentColor', size = 48 }) {
   )
 }
 
-// ── Klinik Bilimler ────────────────────────────────────────────
+// ── AYT Bölümleri ──────────────────────────────────────────────
 
 export function ProstheticIcon({ color = 'currentColor', size = 48 }) {
   // Tooth with crown (jagged top, smooth body)
@@ -216,20 +216,14 @@ export function PerioIcon({ color = 'currentColor', size = 48 }) {
 
 // ── Icon mapping by slug ───────────────────────────────────────
 export const COURSE_ICON_MAP = {
-  anatomy:   AnatomyIcon,
-  physio:    PhysioIcon,
-  biochem:   BiochemIcon,
-  micro:     MicroIcon,
-  patho:     PathoIcon,
-  pharma:    PharmaIcon,
-  prosthetic:ProstheticIcon,
-  surgery:   SurgeryIcon,
-  ortho:     OrthoIcon,
-  endo:      EndoIcon,
-  resto:     RestorativeIcon,
-  pedo:      PedoIcon,
-  radio:     RadioIcon,
-  perio:     PerioIcon,
+  'turkce':               AnatomyIcon,
+  'tyt-matematik':        PhysioIcon,
+  'tyt-fen':              BiochemIcon,
+  'tyt-sosyal':           MicroIcon,
+  'ayt-fen':              ProstheticIcon,
+  'ayt-matematik':        OrthoIcon,
+  'ayt-edebiyat-sosyal1': EndoIcon,
+  'ayt-sosyal2':          PerioIcon,
 }
 
 // ── Bottom nav SVG icons ───────────────────────────────────────

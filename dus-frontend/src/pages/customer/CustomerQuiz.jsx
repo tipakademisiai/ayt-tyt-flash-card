@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { quizAPI, cardExtrasAPI } from '../../api/client'
 import { useAuth } from '../../context/AuthContext'
 import { ThemeToggle } from '../../components/shared'
-import { QUIZ_CARDS, DECK_CARDS, TEMEL_DERSLER, KLINIK_DERSLER, MIX_ALL, MIX_TEMEL, MIX_KLINIK, calcSM2 } from '../../data'
+import { QUIZ_CARDS, DECK_CARDS, TYT_BOLUMLER, AYT_BOLUMLER, MIX_ALL, MIX_TYT, MIX_AYT, calcSM2 } from '../../data'
 import { COURSE_ICON_MAP } from '../../data/courseIcons'
 import toast from 'react-hot-toast'
 
@@ -301,7 +301,7 @@ export default function CustomerQuiz() {
 
     const DeckRow = ({ deck, type }) => {
       const Icon = COURSE_ICON_MAP[deck.slug]
-      const color = type === 'temel' ? '#4A90D0' : '#D0506A'
+      const color = type === 'tyt' ? '#4A90D0' : '#D0506A'
       const cards = DECK_CARDS[deck.slug] || QUIZ_CARDS
       return (
         <div onClick={() => startQuiz(cards, deck.name)}
@@ -316,7 +316,7 @@ export default function CustomerQuiz() {
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--t1)' }}>{deck.name}</div>
-            <div style={{ fontSize: 10, color: 'var(--t3)' }}>{type === 'temel' ? 'Temel ders' : 'Klinik ders'}</div>
+            <div style={{ fontSize: 10, color: 'var(--t3)' }}>{type === 'tyt' ? 'TYT bölümü' : 'AYT bölümü'}</div>
           </div>
           <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--t3)' }}>{cards.length} kart</div>
           <div style={{ fontSize: 16, color: 'var(--t3)' }}>›</div>
@@ -343,33 +343,33 @@ export default function CustomerQuiz() {
         </div>
 
         {/* Karıştır */}
-        <MixRow icon="🔀" label="Hepsini Karıştır" sub="14 ders — tüm müfredat"
+        <MixRow icon="🔀" label="Hepsini Karıştır" sub="8 bölüm — tüm müfredat"
           gradient="linear-gradient(145deg,rgba(80,40,140,.55),rgba(120,80,200,.35))"
           border="rgba(160,139,250,.35)" cards={MIX_ALL} name="Hepsini Karıştır" />
-        <MixRow icon="🔬" label="Temel Dersleri Karıştır" sub="Anatomi, Fizyoloji, Biyokimya..."
+        <MixRow icon="📚" label="TYT Bölümlerini Karıştır" sub="Türkçe, Matematik, Fen..."
           gradient="linear-gradient(145deg,rgba(74,144,208,.55),rgba(0,170,221,.35))"
-          border="rgba(74,144,208,.4)" cards={MIX_TEMEL} name="Temel Dersleri Karıştır" />
-        <MixRow icon="🦷" label="Klinik Dersleri Karıştır" sub="Protetik, Cerrahi, Endodonti..."
+          border="rgba(74,144,208,.4)" cards={MIX_TYT} name="TYT Bölümlerini Karıştır" />
+        <MixRow icon="🎓" label="AYT Bölümlerini Karıştır" sub="Fen, Matematik, Edebiyat..."
           gradient="linear-gradient(145deg,rgba(192,64,96,.55),rgba(255,112,144,.3))"
-          border="rgba(208,80,106,.4)" cards={MIX_KLINIK} name="Klinik Dersleri Karıştır" />
+          border="rgba(208,80,106,.4)" cards={MIX_AYT} name="AYT Bölümlerini Karıştır" />
 
-        {/* Temel Bilimler */}
+        {/* TYT Bölümleri */}
         <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(74,144,208,.9)', letterSpacing: '.08em',
           textTransform: 'uppercase', marginBottom: 10, marginTop: 6,
           display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span>Temel Bilimler</span>
+          <span>TYT</span>
           <div style={{ flex: 1, height: 1, background: 'rgba(74,144,208,.2)' }}/>
         </div>
-        {TEMEL_DERSLER.map(d => <DeckRow key={d.id} deck={d} type="temel" />)}
+        {TYT_BOLUMLER.map(d => <DeckRow key={d.id} deck={d} type="tyt" />)}
 
-        {/* Klinik Bilimler */}
+        {/* AYT Bölümleri */}
         <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(208,80,106,.9)', letterSpacing: '.08em',
           textTransform: 'uppercase', marginBottom: 10, marginTop: 4,
           display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span>Klinik Bilimler</span>
+          <span>AYT</span>
           <div style={{ flex: 1, height: 1, background: 'rgba(208,80,106,.2)' }}/>
         </div>
-        {KLINIK_DERSLER.map(d => <DeckRow key={d.id} deck={d} type="klinik" />)}
+        {AYT_BOLUMLER.map(d => <DeckRow key={d.id} deck={d} type="ayt" />)}
       </div>
     )
   }

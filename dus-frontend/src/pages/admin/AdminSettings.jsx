@@ -29,8 +29,8 @@ function saveSettings(s) {
 }
 
 const DEFAULTS = {
-  platformName: 'dusakademisi.com',
-  supportEmail: 'destek@dusakademisi.com',
+  platformName: 'ayttytflash.com',
+  supportEmail: 'destek@ayttytflash.com',
   examDate:     '2025-12-15',
   trialDays:    '3',
   jwtHours:     '24',
@@ -94,7 +94,7 @@ export default function AdminSettings() {
           </div>
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:14 }}>
             <div className={styles.formGroup} style={{ marginBottom:0 }}>
-              <label className={styles.formLabel}>DUS Sınav Tarihi</label>
+              <label className={styles.formLabel}>YKS Sınav Tarihi</label>
               <input className={styles.formInput} type="date" value={cfg.examDate}
                 onChange={e => set('examDate', e.target.value)} />
             </div>

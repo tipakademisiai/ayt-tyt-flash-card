@@ -168,7 +168,7 @@ export default function AdminDashboard() {
             { icon:'✨', text:'Dr. Mehmet Kaya 24 yeni flashcard ekledi', time:'18 dk önce' },
             { icon:'💬', text:'Ayşe Yıldırım eğitmene soru sordu', time:'1 sa önce' },
             { icon:'📊', text:'Aylık gelir raporu oluşturuldu — ₺48.290', time:'3 sa önce' },
-            { icon:'🔔', text:'DUS sınav hatırlatma bildirimi 847 kişiye gönderildi', time:'5 sa önce' },
+            { icon:'🔔', text:'YKS sınavı hatırlatma bildirimi 847 kişiye gönderildi', time:'5 sa önce' },
           ].map((act, i) => (
             <div key={i} style={{ display:'flex', gap:10, padding:'9px 0',
               borderBottom: i < 4 ? '1px solid var(--border)' : 'none' }}>

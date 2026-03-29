@@ -43,9 +43,9 @@ export default function TrainerAnalytics() {
           <div style={{fontSize:28,fontWeight:900,color:'#10B981',marginBottom:4}}>₺9.658</div>
           <div style={{fontSize:11,color:'var(--t3)',marginBottom:18}}>%20 komisyon oranı · Mart 2026</div>
           {[
-            { label:'DUS Başlangıç öğrencileri', amount:'₺5.240' },
-            { label:'DUS Pro öğrencileri',       amount:'₺3.180' },
-            { label:'DUS + TUS Kombo',           amount:'₺1.238' },
+            { label:'Başlangıç planı öğrencileri', amount:'₺5.240' },
+            { label:'Pro planı öğrencileri',      amount:'₺3.180' },
+            { label:'AYT/TYT Kombo',              amount:'₺1.238' },
           ].map((r,i) => (
             <div key={i} style={{display:'flex',justifyContent:'space-between',
               padding:'9px 0',borderBottom:i<2?'1px solid var(--border)':'none'}}>

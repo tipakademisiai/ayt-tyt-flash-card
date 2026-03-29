@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { imageCardsAPI, activityAPI } from '../../api/client'
 import { useAuth } from '../../context/AuthContext'
-import { TEMEL_DERSLER, KLINIK_DERSLER } from '../../data'
+import { TYT_BOLUMLER, AYT_BOLUMLER } from '../../data'
 import { COURSE_ICON_MAP } from '../../data/courseIcons'
 import { ThemeToggle } from '../../components/shared'
 import styles from '../../styles/shared.module.css'
@@ -296,7 +296,7 @@ function CourseSelectScreen({ onSelect }) {
 
   const DeckRow = ({ deck, type }) => {
     const Icon = COURSE_ICON_MAP[deck.slug]
-    const color = type === 'temel' ? '#4A90D0' : '#D0506A'
+    const color = type === 'tyt' ? '#4A90D0' : '#D0506A'
     return (
       <div onClick={() => onSelect(String(deck.id))}
         style={{ borderRadius: 14, padding: '12px 14px', background: 'var(--card)',
@@ -310,7 +310,7 @@ function CourseSelectScreen({ onSelect }) {
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--t1)' }}>{deck.name}</div>
-          <div style={{ fontSize: 10, color: 'var(--t3)' }}>{type === 'temel' ? 'Temel ders' : 'Klinik ders'}</div>
+          <div style={{ fontSize: 10, color: 'var(--t3)' }}>{type === 'tyt' ? 'TYT bölümü' : 'AYT bölümü'}</div>
         </div>
         <div style={{ fontSize: 16, color: 'var(--t3)' }}>›</div>
       </div>
@@ -327,31 +327,31 @@ function CourseSelectScreen({ onSelect }) {
         <ThemeToggle />
       </div>
 
-      <MixRow icon="🔀" label="Hepsini Karıştır" sub="Tüm derslerden bilgi kartları"
+      <MixRow icon="🔀" label="Hepsini Karıştır" sub="Tüm bölümlerden bilgi kartları"
         gradient="linear-gradient(145deg,rgba(80,40,140,.55),rgba(120,80,200,.35))"
         border="rgba(160,139,250,.35)" value="" />
-      <MixRow icon="🔬" label="Temel Dersler" sub="Anatomi, Fizyoloji, Biyokimya..."
+      <MixRow icon="📚" label="TYT Bölümleri" sub="Türkçe, Matematik, Fen..."
         gradient="linear-gradient(145deg,rgba(74,144,208,.55),rgba(0,170,221,.35))"
-        border="rgba(74,144,208,.4)" value="temel" />
-      <MixRow icon="🦷" label="Klinik Dersler" sub="Protetik, Cerrahi, Endodonti..."
+        border="rgba(74,144,208,.4)" value="tyt" />
+      <MixRow icon="🎓" label="AYT Bölümleri" sub="Fen, Matematik, Edebiyat..."
         gradient="linear-gradient(145deg,rgba(192,64,96,.55),rgba(255,112,144,.3))"
-        border="rgba(208,80,106,.4)" value="klinik" />
+        border="rgba(208,80,106,.4)" value="ayt" />
 
       <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(74,144,208,.9)', letterSpacing: '.08em',
         textTransform: 'uppercase', marginBottom: 10, marginTop: 4,
         display: 'flex', alignItems: 'center', gap: 10 }}>
-        <span>Temel Bilimler</span>
+        <span>TYT</span>
         <div style={{ flex: 1, height: 1, background: 'rgba(74,144,208,.2)' }}/>
       </div>
-      {TEMEL_DERSLER.map(d => <DeckRow key={d.id} deck={d} type="temel" />)}
+      {TYT_BOLUMLER.map(d => <DeckRow key={d.id} deck={d} type="tyt" />)}
 
       <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(208,80,106,.9)', letterSpacing: '.08em',
         textTransform: 'uppercase', marginBottom: 10, marginTop: 4,
         display: 'flex', alignItems: 'center', gap: 10 }}>
-        <span>Klinik Bilimler</span>
+        <span>AYT</span>
         <div style={{ flex: 1, height: 1, background: 'rgba(208,80,106,.2)' }}/>
       </div>
-      {KLINIK_DERSLER.map(d => <DeckRow key={d.id} deck={d} type="klinik" />)}
+      {AYT_BOLUMLER.map(d => <DeckRow key={d.id} deck={d} type="ayt" />)}
     </div>
   )
 }

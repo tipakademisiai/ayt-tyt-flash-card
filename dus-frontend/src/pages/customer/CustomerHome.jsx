@@ -2,26 +2,26 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { ThemeToggle, LogoSVG } from '../../components/shared'
 import styles from '../../styles/shared.module.css'
-import { TEMEL_DERSLER, KLINIK_DERSLER, SRS_COLORS } from '../../data'
+import { TYT_BOLUMLER, AYT_BOLUMLER, SRS_COLORS } from '../../data'
 import { COURSE_ICON_MAP } from '../../data/courseIcons'
 
 const SESSIONS = [
-  { name:'Periodontoloji', score:90, conf:4.2, cards:20, when:'Bugün',    color:'#10B981' },
-  { name:'Anatomi',        score:67, conf:2.8, cards:18, when:'Dün',      color:'#F5A020' },
-  { name:'Farmakoloji',    score:42, conf:1.9, cards:12, when:'2 gün önce',color:'#E05070' },
+  { name:'Türkçe',          score:90, conf:4.2, cards:20, when:'Bugün',    color:'#10B981' },
+  { name:'Matematik (TYT)', score:67, conf:2.8, cards:18, when:'Dün',      color:'#F5A020' },
+  { name:'Fen Bilimleri',   score:42, conf:1.9, cards:12, when:'2 gün önce',color:'#E05070' },
 ]
 
 const PLAN_ITEMS = [
-  { label:'Anatomi — uzun süredir çalışılmadı',  cards:28, urgency:'Acil',  urgColor:'rgba(224,80,112,.15)', urgText:'#FF8090', dot:'#E05070' },
-  { label:'Endodonti — tekrar zamanı geldi',      cards:15, urgency:'Bugün', urgColor:'rgba(245,200,66,.12)', urgText:'#F5C842', dot:'#F5C842' },
-  { label:'Periodontoloji — iyi gidiyorsun',      cards:8,  urgency:'Kolay', urgColor:'rgba(16,185,129,.12)', urgText:'#10B981', dot:'#10B981' },
+  { label:'Türkçe — uzun süredir çalışılmadı',      cards:28, urgency:'Acil',  urgColor:'rgba(224,80,112,.15)', urgText:'#FF8090', dot:'#E05070' },
+  { label:'AYT Matematik — tekrar zamanı geldi',     cards:15, urgency:'Bugün', urgColor:'rgba(245,200,66,.12)', urgText:'#F5C842', dot:'#F5C842' },
+  { label:'Sosyal Bilimler — iyi gidiyorsun',        cards:8,  urgency:'Kolay', urgColor:'rgba(16,185,129,.12)', urgText:'#10B981', dot:'#10B981' },
 ]
 
 function DeckCard({ deck, type }) {
   const navigate = useNavigate()
   const Icon = COURSE_ICON_MAP[deck.slug]
-  const accentColor = type === 'temel' ? '#4A90D0' : '#D0506A'
-  const fillColor   = type === 'temel'
+  const accentColor = type === 'tyt' ? '#4A90D0' : '#D0506A'
+  const fillColor   = type === 'tyt'
     ? 'linear-gradient(90deg,#4A90D0,#00AADD)'
     : 'linear-gradient(90deg,#C04060,#FF7090)'
 
@@ -75,7 +75,7 @@ export default function CustomerHome() {
             <LogoSVG size={22}/>
           </div>
           <div>
-            <div style={{fontSize:14,fontWeight:800,color:'var(--t1)',letterSpacing:'-.02em'}}>dusakademisi<span style={{color:'var(--t3)',fontWeight:500,fontSize:11}}>.com</span></div>
+            <div style={{fontSize:14,fontWeight:800,color:'var(--t1)',letterSpacing:'-.02em'}}>ayttytflash<span style={{color:'var(--t3)',fontWeight:500,fontSize:11}}>.com</span></div>
           </div>
         </div>
         <div style={{display:'flex',gap:8,alignItems:'center'}}>
@@ -96,7 +96,7 @@ export default function CustomerHome() {
         onMouseEnter={e => e.currentTarget.style.transform='scale(1.01)'}
         onMouseLeave={e => e.currentTarget.style.transform=''}>
         <div style={{fontSize:10,fontWeight:600,letterSpacing:'.1em',textTransform:'uppercase',marginBottom:4,color:'rgba(255,255,255,.5)'}}>👋 Hoş geldin, Dr. Adayı</div>
-        <div style={{fontSize:18,fontWeight:800,color:'white',lineHeight:1.3,marginBottom:16}}>DUS'a hazırlığında<br/>bugün ne çalışıyorsun?</div>
+        <div style={{fontSize:18,fontWeight:800,color:'white',lineHeight:1.3,marginBottom:16}}>AYT/TYT'ye hazırlıkta<br/>bugün ne çalışıyorsun?</div>
         <div style={{display:'flex',justifyContent:'center',marginBottom:16}}>
           {[{v:'847',l:'Toplam kart'},{v:'12 🔥',l:'Gün serisi'},{v:'%61',l:'Başarı'},{v:'234',l:'Bekliyor'}].map((s,i,a) => (
             <div key={i} style={{flex:1,textAlign:'center',padding:'0 8px',borderRight:i<a.length-1?'1px solid rgba(255,255,255,.12)':'none'}}>
@@ -129,7 +129,7 @@ export default function CustomerHome() {
         <div style={{fontSize:22}}>📅</div>
         <div style={{flex:1}}>
           <div style={{fontSize:9,fontWeight:700,letterSpacing:'.09em',textTransform:'uppercase',color:'#F5C842',marginBottom:2}}>Sınava Kalan</div>
-          <div style={{fontSize:15,fontWeight:800,color:'var(--t1)'}}>127 gün — Aralık 2025 DUS</div>
+          <div style={{fontSize:15,fontWeight:800,color:'var(--t1)'}}>127 gün — AYT/TYT Sınavı</div>
           <div style={{fontSize:10,color:'var(--t3)',marginTop:1}}>Günde 50 kart → 6.350 kart tamamlanır</div>
         </div>
       </div>
@@ -142,7 +142,7 @@ export default function CustomerHome() {
         onMouseLeave={e => e.currentTarget.style.opacity='1'}>
         <div style={{fontSize:20}}>💙</div>
         <div style={{flex:1}}>
-          <div style={{fontSize:11,fontWeight:800,color:'white',marginBottom:1}}>DUS Pro — Aktif Plan</div>
+          <div style={{fontSize:11,fontWeight:800,color:'white',marginBottom:1}}>Pro Plan — Aktif</div>
           <div style={{fontSize:10,color:'rgba(255,255,255,.5)'}}>₺499/ay · AI kart üretimi dahil · 28 Nis yenilenir</div>
         </div>
         <div style={{fontSize:11,color:'#00AADD',fontWeight:700}}>Yönet ›</div>
@@ -198,11 +198,11 @@ export default function CustomerHome() {
         ))}
       </div>
       <div style={{marginBottom:6,fontSize:10,fontWeight:700,color:'rgba(74,144,208,.9)',letterSpacing:'.08em',textTransform:'uppercase',display:'flex',alignItems:'center',gap:8}}>
-        <span>Temel Bilimler</span>
+        <span>TYT</span>
         <div style={{flex:1,height:1,background:'rgba(74,144,208,.2)'}}/>
       </div>
       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:9,marginBottom:14}}>
-        {TEMEL_DERSLER.slice(0,4).map(d => <DeckCard key={d.id} deck={d} type="temel"/>)}
+        {TYT_BOLUMLER.slice(0,4).map(d => <DeckCard key={d.id} deck={d} type="tyt"/>)}
       </div>
 
       {/* Son çalışmalar */}

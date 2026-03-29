@@ -35,7 +35,7 @@ export default function AdminReports() {
   planBreakdown.forEach(p => { planMap[p.plan] = p.count })
 
   const REVENUE_PRICES = { pro:499, standart:449, baslangic:149 }
-  const PLAN_LABELS    = { pro:'DUS Pro', standart:'DUS Standart', baslangic:'DUS Başlangıç', trial:'Deneme' }
+  const PLAN_LABELS    = { pro:'Pro', standart:'Standart', baslangic:'Başlangıç', trial:'Deneme' }
   const COMM_RATE      = 0.20
 
   const revenueRows = planBreakdown

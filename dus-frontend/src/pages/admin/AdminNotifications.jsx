@@ -7,7 +7,7 @@ import toast from 'react-hot-toast'
 
 export default function AdminNotifications() {
   const qc = useQueryClient()
-  const [title,  setTitle]  = useState('DUS\'a 127 gün kaldı! 🔥')
+  const [title,  setTitle]  = useState('YKS\'ye 127 gün kaldı! 🔥')
   const [body,   setBody]   = useState('Bugün çalışmadın! Hedefine ulaşmak için hemen başla.')
   const [target, setTarget] = useState('all')
   const [type,   setType]   = useState('push')

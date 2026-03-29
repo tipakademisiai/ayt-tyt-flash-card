@@ -246,7 +246,7 @@ function SidebarWrapper({ children, logoSubtitle, logoBoxStyle, tagText, tagStyl
         <div className={styles.sbLogo}>
           <div className={styles.sbLogoBox} style={logoBoxStyle}><LogoSVG /></div>
           <div className={styles.sbLogoText}>
-            dusakademisi<br/>
+            ayttytflash<br/>
             <span className={styles.sbLogoSub}>{logoSubtitle}</span>
           </div>
         </div>

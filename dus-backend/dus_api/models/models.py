@@ -1,10 +1,10 @@
 """
-DUS Akademisi veri modelleri.
+AYT TYT Flash veri modelleri.
 
 Bu dosya uygulamanın tüm Django modellerini tanımlar:
 - User / UserManager: E-posta tabanlı kimlik doğrulama ile özel kullanıcı modeli
 - Subscription: Abonelik planları ve yaşam döngüsü yönetimi
-- Course / Chapter: 14 DUS dersi ve bölümleri
+- Course / Chapter: TYT/AYT bölümleri ve dersleri
 - Flashcard / UserCardProgress: Kart sistemi ve SM-2 tabanlı SRS algoritması
 - Quiz / QuizSession: Quiz yönetimi ve oturum takibi
 - Question: Eğitmen-öğrenci soru-cevap sistemi
@@ -13,7 +13,7 @@ Bu dosya uygulamanın tüm Django modellerini tanımlar:
 - LibraryDocument: PDF referans belgesi kütüphanesi
 - ImageCard: Pro kullanıcılara yönelik görsel hafıza kartları
 - UserActivity: Analitik amaçlı tüm kullanıcı eylem kaydı
-- DUSExamQuestion: Geçmiş yıl DUS sınav soruları
+- DUSExamQuestion: Geçmiş yıl YKS sınavı soruları
 """
 
 import logging
@@ -167,10 +167,10 @@ class Subscription(models.Model):
 # ── BOOK / DECK ───────────────────────────────────────────────────────────────
 
 class Course(models.Model):
-    """14 DUS dersi"""
+    """TYT/AYT bölümleri"""
     BRANCH_CHOICES = [
-        ('temel',   'Temel Bilim'),
-        ('klinik',  'Klinik Bilim'),
+        ('tyt', 'TYT'),
+        ('ayt', 'AYT'),
     ]
 
     name         = models.CharField(max_length=200)

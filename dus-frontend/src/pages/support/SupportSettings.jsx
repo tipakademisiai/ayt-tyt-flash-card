@@ -36,7 +36,7 @@ export default function SupportSettings() {
             <button className={`${styles.btn} ${styles.btnOutline}`} style={{fontSize:10,padding:'4px 10px'}}>Fotoğraf Değiştir</button>
           </div>
           <div style={{marginBottom:12}}><label className={styles.formLabel}>Ad Soyad</label><input className={styles.formInput} defaultValue={user?.full_name || 'Büşra Demir'}/></div>
-          <div style={{marginBottom:12}}><label className={styles.formLabel}>E-posta</label><input className={styles.formInput} defaultValue={user?.email || 'busra@dusakademisi.com'}/></div>
+          <div style={{marginBottom:12}}><label className={styles.formLabel}>E-posta</label><input className={styles.formInput} defaultValue={user?.email || 'busra@ayttytflash.com'}/></div>
           <div style={{marginBottom:12}}><label className={styles.formLabel}>Rol</label><input className={styles.formInput} defaultValue="Müşteri Hizmetleri" readOnly style={{opacity:.6}}/></div>
         </div>
 

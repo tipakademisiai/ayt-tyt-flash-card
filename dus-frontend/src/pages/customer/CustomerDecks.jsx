@@ -1,13 +1,13 @@
 import { useState, useCallback } from 'react'
 import { ThemeToggle } from '../../components/shared'
-import { TEMEL_DERSLER, KLINIK_DERSLER, DECK_CARDS, MIX_ALL, MIX_TEMEL, MIX_KLINIK, SRS_COLORS } from '../../data'
+import { TYT_BOLUMLER, AYT_BOLUMLER, DECK_CARDS, MIX_ALL, MIX_TYT, MIX_AYT, SRS_COLORS } from '../../data'
 import { COURSE_ICON_MAP } from '../../data/courseIcons'
 
 // ── Kurs seçim kartı ──────────────────────────────────────────
 function CourseCard({ deck, type, onSelect }) {
   const Icon = COURSE_ICON_MAP[deck.slug]
-  const accentColor = type === 'temel' ? '#4A90D0' : '#D0506A'
-  const fillColor   = type === 'temel'
+  const accentColor = type === 'tyt' ? '#4A90D0' : '#D0506A'
+  const fillColor   = type === 'tyt'
     ? 'linear-gradient(90deg,#4A90D0,#00AADD)'
     : 'linear-gradient(90deg,#C04060,#FF7090)'
 
@@ -291,48 +291,48 @@ export default function CustomerDecks() {
 
       {/* Karıştır seçenekleri */}
       <MixCard icon="🔀" label="Hepsini Karıştır"
-        sub="14 ders — tüm müfredat"
+        sub="8 bölüm — tüm müfredat"
         gradient="linear-gradient(145deg,rgba(0,80,140,.65),rgba(0,140,200,.45))"
         border="rgba(0,170,221,.35)"
         count={MIX_ALL.length}
         onSelect={() => startDeck(MIX_ALL, 'Hepsini Karıştır')} />
-      <MixCard icon="🔬" label="Temel Dersleri Karıştır"
-        sub="Anatomi, Fizyoloji, Biyokimya..."
+      <MixCard icon="📚" label="TYT Bölümlerini Karıştır"
+        sub="Türkçe, Matematik, Fen..."
         gradient="linear-gradient(145deg,rgba(74,144,208,.55),rgba(0,170,221,.35))"
         border="rgba(74,144,208,.4)"
-        count={MIX_TEMEL.length}
-        onSelect={() => startDeck(MIX_TEMEL, 'Temel Dersleri Karıştır')} />
-      <MixCard icon="🦷" label="Klinik Dersleri Karıştır"
-        sub="Protetik, Cerrahi, Endodonti..."
+        count={MIX_TYT.length}
+        onSelect={() => startDeck(MIX_TYT, 'TYT Bölümlerini Karıştır')} />
+      <MixCard icon="🎓" label="AYT Bölümlerini Karıştır"
+        sub="Fen, Matematik, Edebiyat..."
         gradient="linear-gradient(145deg,rgba(192,64,96,.55),rgba(255,112,144,.3))"
         border="rgba(208,80,106,.4)"
-        count={MIX_KLINIK.length}
-        onSelect={() => startDeck(MIX_KLINIK, 'Klinik Dersleri Karıştır')} />
+        count={MIX_AYT.length}
+        onSelect={() => startDeck(MIX_AYT, 'AYT Bölümlerini Karıştır')} />
 
-      {/* Temel Bilimler */}
+      {/* TYT Bölümleri */}
       <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(74,144,208,.9)', letterSpacing: '.08em',
         textTransform: 'uppercase', marginBottom: 12, marginTop: 4,
         display: 'flex', alignItems: 'center', gap: 10 }}>
-        <span>Temel Bilimler</span>
+        <span>TYT</span>
         <div style={{ flex: 1, height: 1, background: 'rgba(74,144,208,.2)' }}/>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
-        {TEMEL_DERSLER.map(d => (
-          <CourseCard key={d.id} deck={d} type="temel"
+        {TYT_BOLUMLER.map(d => (
+          <CourseCard key={d.id} deck={d} type="tyt"
             onSelect={() => startDeck(DECK_CARDS[d.slug] || [], d.name)} />
         ))}
       </div>
 
-      {/* Klinik Bilimler */}
+      {/* AYT Bölümleri */}
       <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(208,80,106,.9)', letterSpacing: '.08em',
         textTransform: 'uppercase', marginBottom: 12,
         display: 'flex', alignItems: 'center', gap: 10 }}>
-        <span>Klinik Bilimler</span>
+        <span>AYT</span>
         <div style={{ flex: 1, height: 1, background: 'rgba(208,80,106,.2)' }}/>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-        {KLINIK_DERSLER.map(d => (
-          <CourseCard key={d.id} deck={d} type="klinik"
+        {AYT_BOLUMLER.map(d => (
+          <CourseCard key={d.id} deck={d} type="ayt"
             onSelect={() => startDeck(DECK_CARDS[d.slug] || [], d.name)} />
         ))}
       </div>

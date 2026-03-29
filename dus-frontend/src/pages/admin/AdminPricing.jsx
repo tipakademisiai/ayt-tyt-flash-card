@@ -7,19 +7,19 @@ import toast from 'react-hot-toast'
 
 // ── Statik paket tanımları (DB'ye taşınana kadar) ──────────────────────────
 const INITIAL_PACKAGES = [
-  { id:1, name:'DUS Başlangıç', monthly:149, yearly:1290, color:'#10B981',
-    features:['Tüm dersler','SRS kartlar','Quiz modu','Eğitmene soru sor'] },
-  { id:2, name:'DUS Standart',  monthly:449, yearly:3990, color:'#00AADD',
+  { id:1, name:'Başlangıç', monthly:149, yearly:1290, color:'#10B981',
+    features:['Tüm bölümler','SRS kartlar','Quiz modu','Eğitmene soru sor'] },
+  { id:2, name:'Standart',  monthly:449, yearly:3990, color:'#00AADD',
     features:['Başlangıç + AI günlük plan','Gelişmiş analitik'] },
-  { id:3, name:'DUS Pro',       monthly:499, yearly:4490, color:'#A78BFA',
+  { id:3, name:'Pro',       monthly:499, yearly:4490, color:'#A78BFA',
     features:['Standart + AI kart üretimi','Bilgi kartları','Öncelikli destek'] },
 ]
 
 const PAYMENTS = [
-  { user:'Dr. Zeynep Şahin', plan:'DUS Başlangıç', amount:'₺149', method:'Kredi Kartı', date:'28 Mar', status:'Başarılı', sc:'#10B981' },
-  { user:'Mehmet Kılıç',     plan:'DUS Pro',       amount:'₺499', method:'Havale',      date:'27 Mar', status:'Bekliyor',  sc:'#F5C842' },
-  { user:'Dr. Hakan Çelik',  plan:'DUS Başlangıç', amount:'₺149', method:'Kredi Kartı', date:'25 Mar', status:'Başarılı', sc:'#10B981' },
-  { user:'Selin Erdoğan',    plan:'DUS Pro',       amount:'₺499', method:'Kredi Kartı', date:'20 Mar', status:'İade',      sc:'#E05070' },
+  { user:'Zeynep Şahin', plan:'Başlangıç', amount:'₺149', method:'Kredi Kartı', date:'28 Mar', status:'Başarılı', sc:'#10B981' },
+  { user:'Mehmet Kılıç', plan:'Pro',       amount:'₺499', method:'Havale',      date:'27 Mar', status:'Bekliyor',  sc:'#F5C842' },
+  { user:'Hakan Çelik',  plan:'Başlangıç', amount:'₺149', method:'Kredi Kartı', date:'25 Mar', status:'Başarılı', sc:'#10B981' },
+  { user:'Selin Erdoğan',plan:'Pro',       amount:'₺499', method:'Kredi Kartı', date:'20 Mar', status:'İade',      sc:'#E05070' },
 ]
 
 function PackageModal({ pkg, onClose, onSave }) {
@@ -41,7 +41,7 @@ function PackageModal({ pkg, onClose, onSave }) {
         <div className={styles.formGroup}>
           <label className={styles.formLabel}>Paket Adı *</label>
           <input className={styles.formInput} value={form.name}
-            onChange={e => setForm(f=>({...f, name:e.target.value}))} placeholder="DUS Pro" />
+            onChange={e => setForm(f=>({...f, name:e.target.value}))} placeholder="Pro" />
         </div>
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:14 }}>
           <div className={styles.formGroup} style={{ marginBottom:0 }}>
