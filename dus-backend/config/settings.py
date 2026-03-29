@@ -71,9 +71,9 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'djongo',
-            'NAME': config('MONGODB_NAME', default='dusakademisi'),
+            'NAME': config('MONGODB_NAME', default='ayttytflashcard'),
             'CLIENT': {
-                'host': config('MONGODB_URI', default='mongodb://localhost:27017/dusakademisi'),
+                'host': config('MONGODB_URI', default='mongodb://localhost:27017/ayttytflashcard'),
             }
         }
     }
@@ -115,7 +115,7 @@ SIMPLE_JWT = {
 # ── CORS ───────────────────────────────────────────────────────
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:5173,http://localhost:3000'
+    default='http://localhost:5174,http://localhost:3000'
 ).split(',')
 CORS_ALLOW_CREDENTIALS = True
 
