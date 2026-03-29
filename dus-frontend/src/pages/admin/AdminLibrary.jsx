@@ -66,9 +66,11 @@ function DocumentsTab({ courses }) {
   const [genCards, setGenCards]     = useState(null)
   const [savingCards, setSavingCards] = useState(false)
   // CSV import state
-  const [csvOpen,    setCsvOpen]    = useState(false)
-  const [csvParsed,  setCsvParsed]  = useState([])   // tüm parse edilmiş kartlar
-  const [csvFileName,setCsvFileName]= useState('')
+  const [csvOpen,      setCsvOpen]      = useState(false)
+  const [csvParsed,    setCsvParsed]    = useState([])
+  const [csvFileName,  setCsvFileName]  = useState('')
+  const [csvFilter,    setCsvFilter]    = useState('all')   // 'all' | 'unmatched'
+  const [csvResult,    setCsvResult]    = useState(null)    // import sonucu { saved, unmatched[] }
 
   const { data: docs = [], isLoading } = useQuery({
     queryKey: ['library', search, filterType],
@@ -146,16 +148,21 @@ function DocumentsTab({ courses }) {
     const matched   = csvParsed.filter(c => c.slug)
     const unmatched = csvParsed.filter(c => !c.slug)
     if (!matched.length) { toast.error('Eşleşen ders bulunamadı. KATEGORİ ve DERS sütunlarını kontrol et.'); return }
-
-    // slug'a göre grupla
     const bySlug = {}
     matched.forEach(c => {
       if (!bySlug[c.slug]) bySlug[c.slug] = []
       bySlug[c.slug].push({ id:c.id, q:c.q, a:c.a, baslik:c.baslik })
     })
     const saved = saveImportedCards(bySlug)
-    toast.success(`${saved} kart import edildi!${unmatched.length ? ` (${unmatched.length} satır eşleşmedi)` : ''}`)
-    setCsvOpen(false); setCsvParsed([])
+    setCsvOpen(false)
+    setCsvParsed([])
+    setCsvFilter('all')
+    // Eşleşmeyenler varsa sonuç ekranını göster, yoksa sadece toast
+    if (unmatched.length) {
+      setCsvResult({ saved, unmatched })
+    } else {
+      toast.success(`${saved} kart başarıyla import edildi! ✅`)
+    }
   }
 
   return (
@@ -201,74 +208,175 @@ function DocumentsTab({ courses }) {
               D=KATEGORİ (TYT/AYT) &nbsp;·&nbsp; E=BÖLÜM &nbsp;·&nbsp; F=DERS
             </div>
 
-            {/* Özet sayaçlar */}
+            {/* Özet sayaçlar — Eşleşmedi'ye tıklayınca filtrele */}
             <div style={{ display:'flex', gap:10, marginBottom:14 }}>
               {[
-                { label:'Toplam',    val: csvParsed.length,              color:'var(--t2)' },
-                { label:'Eşleşti',  val: csvParsed.filter(c=>c.slug).length,  color:'#10B981' },
-                { label:'Eşleşmedi',val: csvParsed.filter(c=>!c.slug).length, color:'#F5A020' },
+                { key:'all',       label:'Toplam',    val: csvParsed.length,                    color:'var(--t2)', clickable: false },
+                { key:'matched',   label:'Eşleşti',   val: csvParsed.filter(c=>c.slug).length,  color:'#10B981',   clickable: false },
+                { key:'unmatched', label:'Eşleşmedi', val: csvParsed.filter(c=>!c.slug).length, color:'#F5A020',   clickable: csvParsed.filter(c=>!c.slug).length > 0 },
               ].map(s => (
-                <div key={s.label} style={{ flex:1, padding:'8px 10px', borderRadius:10,
-                  background:'var(--input)', border:'1px solid var(--border)', textAlign:'center' }}>
+                <div key={s.key}
+                  onClick={() => s.clickable && setCsvFilter(f => f === s.key ? 'all' : s.key)}
+                  style={{ flex:1, padding:'8px 10px', borderRadius:10, textAlign:'center',
+                    background: csvFilter === s.key ? `${s.color}22` : 'var(--input)',
+                    border: csvFilter === s.key ? `1px solid ${s.color}88` : '1px solid var(--border)',
+                    cursor: s.clickable ? 'pointer' : 'default',
+                    transition: 'all .15s',
+                  }}>
                   <div style={{ fontSize:18, fontWeight:900, color:s.color }}>{s.val}</div>
-                  <div style={{ fontSize:9, color:'var(--t3)', fontWeight:600 }}>{s.label}</div>
+                  <div style={{ fontSize:9, color:'var(--t3)', fontWeight:600 }}>
+                    {s.label}{s.clickable ? (csvFilter === s.key ? ' ✕' : ' 👆') : ''}
+                  </div>
                 </div>
               ))}
             </div>
 
             {/* Tablo önizleme */}
-            <div style={{ flex:1, overflowY:'auto', marginBottom:16, maxHeight:320 }}>
-              <table style={{ width:'100%', borderCollapse:'collapse', fontSize:11 }}>
-                <thead>
-                  <tr style={{ background:'var(--input)' }}>
-                    {['#','BAŞLIK','SORU','AÇIKLAMA','KATEGORİ','BÖLÜM','DERS','Slug'].map(h => (
-                      <th key={h} style={{ padding:'6px 8px', textAlign:'left', fontWeight:700,
-                        color:'var(--t3)', borderBottom:'1px solid var(--border)', whiteSpace:'nowrap' }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {csvParsed.slice(0, 50).map((c, i) => (
-                    <tr key={c.id} style={{ borderBottom:'1px solid var(--border)' }}>
-                      <td style={{ padding:'5px 8px', color:'var(--t3)' }}>{i+1}</td>
-                      <td style={{ padding:'5px 8px', color:'var(--t2)', maxWidth:80, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.baslik}</td>
-                      <td style={{ padding:'5px 8px', color:'var(--t1)', maxWidth:140, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.q}</td>
-                      <td style={{ padding:'5px 8px', color:'var(--t2)', maxWidth:120, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.a}</td>
-                      <td style={{ padding:'5px 8px', fontWeight:700,
-                        color: c.kategori==='TYT' ? '#4A90D0' : c.kategori==='AYT' ? '#D0506A' : 'var(--t3)' }}>
-                        {c.kategori||'—'}
-                      </td>
-                      <td style={{ padding:'5px 8px', color:'var(--t2)' }}>{c.bolum||'—'}</td>
-                      <td style={{ padding:'5px 8px', color:'var(--t2)' }}>{c.ders||'—'}</td>
-                      <td style={{ padding:'5px 8px' }}>
-                        {c.slug
-                          ? <span style={{ padding:'2px 6px', borderRadius:5, fontSize:9, fontWeight:700,
-                              background:'rgba(16,185,129,.12)', color:'#10B981' }}>✓ {c.slug}</span>
-                          : <span style={{ padding:'2px 6px', borderRadius:5, fontSize:9, fontWeight:700,
-                              background:'rgba(245,160,32,.12)', color:'#F5A020' }}>eşleşmedi</span>
-                        }
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {csvParsed.length > 50 && (
-                <div style={{ textAlign:'center', padding:10, fontSize:10, color:'var(--t3)' }}>
-                  ... ve {csvParsed.length - 50} satır daha
+            {(() => {
+              const rows = csvFilter === 'unmatched'
+                ? csvParsed.filter(c => !c.slug)
+                : csvParsed
+              const visible = rows.slice(0, 50)
+              return (
+                <div style={{ flex:1, overflowY:'auto', marginBottom:16, maxHeight:320 }}>
+                  {csvFilter === 'unmatched' && (
+                    <div style={{ padding:'6px 10px', marginBottom:8, borderRadius:8,
+                      background:'rgba(245,160,32,.1)', border:'1px solid rgba(245,160,32,.25)',
+                      fontSize:10, color:'#F5A020', fontWeight:600 }}>
+                      ⚠️ Sadece eşleşmeyen {rows.length} satır gösteriliyor
+                      &nbsp;—&nbsp;
+                      <span style={{ cursor:'pointer', textDecoration:'underline' }} onClick={() => setCsvFilter('all')}>tümünü göster</span>
+                    </div>
+                  )}
+                  <table style={{ width:'100%', borderCollapse:'collapse', fontSize:11 }}>
+                    <thead>
+                      <tr style={{ background:'var(--input)' }}>
+                        {['#','BAŞLIK','SORU','KATEGORİ','BÖLÜM','DERS','Durum'].map(h => (
+                          <th key={h} style={{ padding:'6px 8px', textAlign:'left', fontWeight:700,
+                            color:'var(--t3)', borderBottom:'1px solid var(--border)', whiteSpace:'nowrap' }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {visible.map((c, i) => (
+                        <tr key={c.id} style={{ borderBottom:'1px solid var(--border)',
+                          background: !c.slug ? 'rgba(245,160,32,.04)' : 'transparent' }}>
+                          <td style={{ padding:'5px 8px', color:'var(--t3)' }}>{csvParsed.indexOf(c)+1}</td>
+                          <td style={{ padding:'5px 8px', color:'var(--t2)', maxWidth:80, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.baslik}</td>
+                          <td style={{ padding:'5px 8px', color:'var(--t1)', maxWidth:160, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.q}</td>
+                          <td style={{ padding:'5px 8px', fontWeight:700,
+                            color: c.kategori==='TYT' ? '#4A90D0' : c.kategori==='AYT' ? '#D0506A' : 'var(--t3)' }}>
+                            {c.kategori||'—'}
+                          </td>
+                          <td style={{ padding:'5px 8px', color:'var(--t2)' }}>{c.bolum||'—'}</td>
+                          <td style={{ padding:'5px 8px', color:'var(--t2)' }}>{c.ders||'—'}</td>
+                          <td style={{ padding:'5px 8px' }}>
+                            {c.slug
+                              ? <span style={{ padding:'2px 6px', borderRadius:5, fontSize:9, fontWeight:700,
+                                  background:'rgba(16,185,129,.12)', color:'#10B981' }}>✓</span>
+                              : <span style={{ padding:'2px 6px', borderRadius:5, fontSize:9, fontWeight:700,
+                                  background:'rgba(245,160,32,.15)', color:'#F5A020' }}>eşleşmedi</span>
+                            }
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {rows.length > 50 && (
+                    <div style={{ textAlign:'center', padding:10, fontSize:10, color:'var(--t3)' }}>
+                      ... ve {rows.length - 50} satır daha
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              )
+            })()}
 
             {/* Butonlar */}
             <div style={{ display:'flex', gap:10 }}>
               <button className={`${styles.btn} ${styles.btnOutline}`} style={{ flex:1 }}
-                onClick={() => { setCsvOpen(false); setCsvParsed([]) }}>İptal</button>
+                onClick={() => { setCsvOpen(false); setCsvParsed([]); setCsvFilter('all') }}>İptal</button>
               <button className={`${styles.btn} ${styles.btnPrimary}`} style={{ flex:1 }}
                 onClick={handleCsvImport}
                 disabled={!csvParsed.filter(c=>c.slug).length}>
                 {csvParsed.filter(c=>c.slug).length} Kartı Import Et
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Import Sonuç Modalı — eşleşmeyen satırlar */}
+      {csvResult && (
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.65)', zIndex:200,
+          display:'flex', alignItems:'center', justifyContent:'center' }}
+          onClick={e => { if (e.target===e.currentTarget) setCsvResult(null) }}>
+          <div style={{ background:'var(--card)', border:'1px solid var(--border)',
+            borderRadius:20, padding:28, width:600, maxWidth:'96vw', maxHeight:'85vh',
+            display:'flex', flexDirection:'column' }}>
+
+            {/* Başlık */}
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:18 }}>
+              <div>
+                <div style={{ fontSize:15, fontWeight:800, color:'var(--t1)' }}>📋 Import Sonucu</div>
+              </div>
+              <button onClick={() => setCsvResult(null)}
+                style={{ background:'none', border:'none', color:'var(--t3)', fontSize:18, cursor:'pointer' }}>✕</button>
+            </div>
+
+            {/* Özet */}
+            <div style={{ display:'flex', gap:10, marginBottom:18 }}>
+              <div style={{ flex:1, padding:'12px', borderRadius:12, textAlign:'center',
+                background:'rgba(16,185,129,.1)', border:'1px solid rgba(16,185,129,.25)' }}>
+                <div style={{ fontSize:24, fontWeight:900, color:'#10B981' }}>{csvResult.saved}</div>
+                <div style={{ fontSize:10, color:'#10B981', fontWeight:700 }}>Kart İmport Edildi ✅</div>
+              </div>
+              <div style={{ flex:1, padding:'12px', borderRadius:12, textAlign:'center',
+                background:'rgba(245,160,32,.1)', border:'1px solid rgba(245,160,32,.25)' }}>
+                <div style={{ fontSize:24, fontWeight:900, color:'#F5A020' }}>{csvResult.unmatched.length}</div>
+                <div style={{ fontSize:10, color:'#F5A020', fontWeight:700 }}>Satır Atlandı ⚠️</div>
+              </div>
+            </div>
+
+            {/* Eşleşmeyen satırlar */}
+            <div style={{ fontSize:11, fontWeight:700, color:'#F5A020', marginBottom:8 }}>
+              Import edilemeyen satırlar — KATEGORİ veya DERS değeri tanımsız:
+            </div>
+            <div style={{ flex:1, overflowY:'auto', marginBottom:18 }}>
+              <table style={{ width:'100%', borderCollapse:'collapse', fontSize:11 }}>
+                <thead>
+                  <tr style={{ background:'var(--input)' }}>
+                    {['#','BAŞLIK','SORU','KATEGORİ','BÖLÜM','DERS'].map(h => (
+                      <th key={h} style={{ padding:'6px 8px', textAlign:'left', fontWeight:700,
+                        color:'var(--t3)', borderBottom:'1px solid var(--border)', whiteSpace:'nowrap' }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {csvResult.unmatched.map((c, i) => (
+                    <tr key={c.id} style={{ borderBottom:'1px solid var(--border)', background:'rgba(245,160,32,.04)' }}>
+                      <td style={{ padding:'5px 8px', color:'var(--t3)' }}>{i+1}</td>
+                      <td style={{ padding:'5px 8px', color:'var(--t2)', maxWidth:90, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.baslik||'—'}</td>
+                      <td style={{ padding:'5px 8px', color:'var(--t1)', maxWidth:180, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.q}</td>
+                      <td style={{ padding:'5px 8px', fontWeight:700,
+                        color: c.kategori==='TYT'?'#4A90D0':c.kategori==='AYT'?'#D0506A':'#F5A020' }}>
+                        {c.kategori||'❌ boş'}
+                      </td>
+                      <td style={{ padding:'5px 8px', color:'var(--t2)' }}>{c.bolum||'❌ boş'}</td>
+                      <td style={{ padding:'5px 8px', color:'var(--t2)' }}>{c.ders||'❌ boş'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div style={{ fontSize:10, color:'var(--t3)', marginBottom:14, padding:'8px 10px',
+              background:'rgba(0,0,0,.15)', borderRadius:8, lineHeight:1.7 }}>
+              💡 Bu satırları düzeltmek için CSV'de D=KATEGORİ (TYT veya AYT) ve F=DERS sütunlarının
+              geçerli bir ders adı içerdiğinden emin ol, ardından tekrar import et.
+            </div>
+
+            <button className={`${styles.btn} ${styles.btnPrimary}`}
+              onClick={() => setCsvResult(null)}>Tamam</button>
           </div>
         </div>
       )}
