@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { ThemeToggle } from '../../components/shared'
-import { TYT_BOLUMLER, AYT_BOLUMLER, DECK_CARDS, MIX_ALL, MIX_TYT, MIX_AYT, SRS_COLORS, getImportedCards } from '../../data'
+import { TYT_BOLUMLER, AYT_BOLUMLER, DECK_CARDS, SRS_COLORS, getImportedCards } from '../../data'
 import { COURSE_ICON_MAP } from '../../data/courseIcons'
 import toast from 'react-hot-toast'
 
@@ -215,6 +215,16 @@ function getDeckCards(slug) {
   return [...(DECK_CARDS[slug] || []), ...getImportedCards(slug)]
 }
 
+// ── Dinamik MIX hesaplama (localStorage dahil) ────────────────
+function buildMix(bolumler) {
+  return bolumler.flatMap(b => b.dersler.flatMap(d => getDeckCards(d.slug)))
+}
+
+// ── Bölüm toplam kart sayısı (dinamik) ───────────────────────
+function bolumCardCount(bolum) {
+  return bolum.dersler.reduce((s, d) => s + getDeckCards(d.slug).length, 0)
+}
+
 // ── ANA BİLEŞEN ───────────────────────────────────────────────
 export default function CustomerDecks() {
   const [phase, setPhase]               = useState('select')
@@ -290,7 +300,7 @@ export default function CustomerDecks() {
           <div>
             <div style={{ fontSize: 13, fontWeight: 800, color: 'white' }}>🔀 Tüm {selectedBolum.name}</div>
             <div style={{ fontSize: 10, color: 'rgba(255,255,255,.6)', marginTop: 2 }}>
-              {selectedBolum.dersler.length} ders — {selectedBolum.cards} kart
+              {selectedBolum.dersler.length} ders — {bolumCardCount(selectedBolum)} kart
             </div>
           </div>
           <div style={{ fontSize: 14, fontWeight: 800, color: 'white' }}>→</div>
@@ -309,7 +319,7 @@ export default function CustomerDecks() {
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--card)' }}>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--t1)' }}>{ders.name}</div>
-                <div style={{ fontSize: 10, color: 'var(--t3)', marginTop: 2 }}>{ders.cards} kart</div>
+                <div style={{ fontSize: 10, color: 'var(--t3)', marginTop: 2 }}>{getDeckCards(ders.slug).length} kart</div>
               </div>
               <div style={{ fontSize: 18, color: color }}>›</div>
             </div>
@@ -351,7 +361,7 @@ export default function CustomerDecks() {
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--t1)' }}>{bolum.name}</div>
                   <div style={{ fontSize: 10, color: 'var(--t3)', marginTop: 2 }}>
-                    {bolum.dersler.length} ders · {bolum.cards} kart
+                    {bolum.dersler.length} ders · {bolumCardCount(bolum)} kart
                   </div>
                 </div>
                 <div style={{ fontSize: 18, color: 'var(--t3)' }}>›</div>
@@ -379,31 +389,42 @@ export default function CustomerDecks() {
         <div style={{ flex: 1, height: 1, background: 'var(--border)' }}/>
       </div>
 
-      {/* Hepsini Karıştır */}
-      <MixCard icon="🔀" label="Hepsini Karıştır"
-        sub="TYT + AYT — tüm müfredat"
-        gradient="linear-gradient(145deg,rgba(0,80,140,.65),rgba(0,140,200,.45))"
-        border="rgba(0,170,221,.35)"
-        count={MIX_ALL.length}
-        onSelect={() => startDeck(MIX_ALL, 'Hepsini Karıştır')} />
+      {/* Hepsini Karıştır — dinamik (localStorage dahil) */}
+      {(() => {
+        const mixAll = buildMix([...TYT_BOLUMLER, ...AYT_BOLUMLER])
+        return (
+          <MixCard icon="🔀" label="Hepsini Karıştır"
+            sub="TYT + AYT — tüm müfredat"
+            gradient="linear-gradient(145deg,rgba(0,80,140,.65),rgba(0,140,200,.45))"
+            border="rgba(0,170,221,.35)"
+            count={mixAll.length}
+            onSelect={() => startDeck(mixAll, 'Hepsini Karıştır')} />
+        )
+      })()}
 
-      {/* TYT + AYT Karıştır (2'li grid) */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
-        <MixCard icon="📚" label="TYT Karıştır"
-          sub="4 bölüm"
-          gradient="linear-gradient(145deg,rgba(74,144,208,.55),rgba(0,170,221,.35))"
-          border="rgba(74,144,208,.4)"
-          count={MIX_TYT.length}
-          compact
-          onSelect={() => startDeck(MIX_TYT, 'TYT Karıştır')} />
-        <MixCard icon="🎓" label="AYT Karıştır"
-          sub="4 bölüm"
-          gradient="linear-gradient(145deg,rgba(192,64,96,.55),rgba(255,112,144,.3))"
-          border="rgba(208,80,106,.4)"
-          count={MIX_AYT.length}
-          compact
-          onSelect={() => startDeck(MIX_AYT, 'AYT Karıştır')} />
-      </div>
+      {/* TYT + AYT Karıştır (2'li grid) — dinamik */}
+      {(() => {
+        const mixTYT = buildMix(TYT_BOLUMLER)
+        const mixAYT = buildMix(AYT_BOLUMLER)
+        return (
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
+            <MixCard icon="📚" label="TYT Karıştır"
+              sub="4 bölüm"
+              gradient="linear-gradient(145deg,rgba(74,144,208,.55),rgba(0,170,221,.35))"
+              border="rgba(74,144,208,.4)"
+              count={mixTYT.length}
+              compact
+              onSelect={() => startDeck(mixTYT, 'TYT Karıştır')} />
+            <MixCard icon="🎓" label="AYT Karıştır"
+              sub="4 bölüm"
+              gradient="linear-gradient(145deg,rgba(192,64,96,.55),rgba(255,112,144,.3))"
+              border="rgba(208,80,106,.4)"
+              count={mixAYT.length}
+              compact
+              onSelect={() => startDeck(mixAYT, 'AYT Karıştır')} />
+          </div>
+        )
+      })()}
 
       {/* Kategoriler başlığı */}
       <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--t3)', letterSpacing: '.08em',
@@ -428,7 +449,7 @@ export default function CustomerDecks() {
           <div style={{ fontSize: 18, fontWeight: 900, color: '#4A90D0', marginBottom: 4 }}>TYT</div>
           <div style={{ fontSize: 10, color: 'rgba(74,144,208,.8)', marginBottom: 8 }}>Temel Yeterlilik</div>
           <div style={{ fontSize: 10, color: 'var(--t3)' }}>
-            4 bölüm · {TYT_BOLUMLER.reduce((s, b) => s + b.cards, 0)} kart
+            4 bölüm · {TYT_BOLUMLER.reduce((s, b) => s + bolumCardCount(b), 0)} kart
           </div>
         </div>
 
@@ -445,7 +466,7 @@ export default function CustomerDecks() {
           <div style={{ fontSize: 18, fontWeight: 900, color: '#D0506A', marginBottom: 4 }}>AYT</div>
           <div style={{ fontSize: 10, color: 'rgba(208,80,106,.8)', marginBottom: 8 }}>Alan Yeterlilik</div>
           <div style={{ fontSize: 10, color: 'var(--t3)' }}>
-            4 bölüm · {AYT_BOLUMLER.reduce((s, b) => s + b.cards, 0)} kart
+            4 bölüm · {AYT_BOLUMLER.reduce((s, b) => s + bolumCardCount(b), 0)} kart
           </div>
         </div>
       </div>

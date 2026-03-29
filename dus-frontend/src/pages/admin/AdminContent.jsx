@@ -1,9 +1,19 @@
 import { useState } from 'react'
 import { PageTopbar, KpiCard, Badge, FilterBar, Modal, ConfirmModal } from '../../components/shared'
-import { cardsAPI, coursesAPI } from '../../api/client'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { coursesAPI } from '../../api/client'
+import { useQuery } from '@tanstack/react-query'
 import styles from '../../styles/shared.module.css'
 import toast from 'react-hot-toast'
+
+// ── localStorage yardımcıları ─────────────────────────────────
+const LS_CARDS_KEY = 'ayttyt_admin_cards_v1'
+function loadLocalCards() {
+  try { const s = localStorage.getItem(LS_CARDS_KEY); return s ? JSON.parse(s) : null }
+  catch { return null }
+}
+function persistLocalCards(cards) {
+  try { localStorage.setItem(LS_CARDS_KEY, JSON.stringify(cards)) } catch {}
+}
 
 // ── MOCK VERİ (backend olmadan) ───────────────────────────────
 const MOCK_COURSES = [
@@ -40,8 +50,6 @@ const STATUS_LABEL = { published:'Yayında', pending:'Onay Bekliyor', draft:'Tas
 const EMPTY_FORM = { question:'', answer:'', card_type:'qa', course:'', chapter:'', status:'draft' }
 
 export default function AdminContent() {
-  const qc = useQueryClient()
-
   const [search,      setSearch]      = useState('')
   const [filterType,  setFilterType]  = useState('')
   const [filterStat,  setFilterStat]  = useState('')
@@ -50,26 +58,23 @@ export default function AdminContent() {
   const [deleteCard,  setDeleteCard]  = useState(null)
   const [form,        setForm]        = useState(EMPTY_FORM)
 
-  // ── DATA ──────────────────────────────────────────────────────
-  const { data: rawCards, isLoading, isError: cardsErr } = useQuery({
-    queryKey: ['admin-cards', search, filterType, filterStat],
-    queryFn: () => cardsAPI.list({
-      search:    search    || undefined,
-      card_type: filterType || undefined,
-      status:    filterStat || undefined,
-    }).then(r => r.data?.results ?? r.data),
-    retry: 1,
-  })
+  // ── YEREL KART DURUMU (localStorage kalıcı) ───────────────────
+  const [allCards, setAllCards] = useState(() => loadLocalCards() || MOCK_CARDS)
+
+  const saveCards = (updated) => {
+    setAllCards(updated)
+    persistLocalCards(updated)
+  }
+
+  // ── KURS LİSTESİ (backend veya mock) ──────────────────────────
   const { data: rawCourses, isError: coursesErr } = useQuery({
     queryKey: ['courses'],
     queryFn: () => coursesAPI.list().then(r => r.data?.results ?? r.data),
     retry: 1,
   })
+  const courses = (coursesErr || !rawCourses) ? MOCK_COURSES : rawCourses
 
-  const allCards = (cardsErr  || !rawCards)   ? MOCK_CARDS   : rawCards
-  const courses  = (coursesErr || !rawCourses) ? MOCK_COURSES : rawCourses
-
-  // Arama + filtre (mock ve gerçek veri için)
+  // ── FİLTRELEME ────────────────────────────────────────────────
   const cards = allCards.filter(c => {
     if (search     && !c.question?.toLowerCase().includes(search.toLowerCase())) return false
     if (filterType && c.card_type !== filterType) return false
@@ -81,51 +86,27 @@ export default function AdminContent() {
   const chapters = selectedCourse?.chapters ?? []
 
   // ── KPI ───────────────────────────────────────────────────────
-  const total     = cards.length
-  const published = cards.filter(c => c.status === 'published').length
-  const pending   = cards.filter(c => c.status === 'pending').length
-
-  // ── MUTATIONS ─────────────────────────────────────────────────
-  const approveMut = useMutation({
-    mutationFn: (id) => cardsAPI.approve(id),
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-cards'] }); toast.success('Kart onaylandı.') },
-    onError: () => toast.error('Onaylama başarısız.'),
-  })
-
-  const rejectMut = useMutation({
-    mutationFn: (id) => cardsAPI.reject(id),
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-cards'] }); toast.success('Kart reddedildi.') },
-    onError: () => toast.error('Reddetme başarısız.'),
-  })
-
-  const deleteMut = useMutation({
-    mutationFn: (id) => cardsAPI.delete(id),
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-cards'] }); toast.success('Kart silindi.') },
-    onError: () => toast.error('Silme başarısız.'),
-  })
-
-  const createMut = useMutation({
-    mutationFn: (d) => cardsAPI.create(d),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['admin-cards'] })
-      toast.success('Kart oluşturuldu.')
-      setNewOpen(false)
-      setForm(EMPTY_FORM)
-    },
-    onError: () => toast.error('Oluşturma başarısız.'),
-  })
-
-  const updateMut = useMutation({
-    mutationFn: ({ id, data }) => cardsAPI.update(id, data),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['admin-cards'] })
-      toast.success('Kart güncellendi.')
-      setEditCard(null)
-    },
-    onError: () => toast.error('Güncelleme başarısız.'),
-  })
+  const total     = allCards.length
+  const published = allCards.filter(c => c.status === 'published').length
+  const pending   = allCards.filter(c => c.status === 'pending').length
 
   // ── HANDLERS ──────────────────────────────────────────────────
+  const doApprove = (id) => {
+    saveCards(allCards.map(c => c.id === id ? { ...c, status: 'published' } : c))
+    toast.success('Kart yayına alındı! ✅')
+  }
+
+  const doReject = (id) => {
+    saveCards(allCards.map(c => c.id === id ? { ...c, status: 'rejected' } : c))
+    toast.success('Kart reddedildi.')
+  }
+
+  const doDelete = (id) => {
+    saveCards(allCards.filter(c => c.id !== id))
+    setDeleteCard(null)
+    toast.success('Kart silindi.')
+  }
+
   const openEdit = (card) => {
     setForm({
       question:  card.question,
@@ -143,20 +124,37 @@ export default function AdminContent() {
     answer:    form.answer,
     card_type: form.card_type,
     status:    form.status,
-    ...(form.course  && { course:  form.course }),
-    ...(form.chapter && { chapter: form.chapter }),
+    ...(form.course  && { course:  Number(form.course) }),
+    ...(form.chapter && { chapter: Number(form.chapter) }),
   })
 
   const handleCreate = () => {
     if (!form.question.trim() || !form.answer.trim() || !form.course)
       return toast.error('Soru, cevap ve ders zorunludur.')
-    createMut.mutate(buildPayload())
+    const course = courses.find(c => String(c.id) === String(form.course))
+    const newCard = {
+      ...buildPayload(),
+      id: Date.now(),
+      course_name: course?.name || '',
+      created_at: new Date().toISOString().split('T')[0],
+    }
+    saveCards([...allCards, newCard])
+    toast.success('Kart oluşturuldu. ✅')
+    setNewOpen(false)
+    setForm(EMPTY_FORM)
   }
 
   const handleUpdate = () => {
     if (!form.question.trim() || !form.answer.trim())
       return toast.error('Soru ve cevap zorunludur.')
-    updateMut.mutate({ id: editCard.id, data: buildPayload() })
+    const course = courses.find(c => String(c.id) === String(form.course))
+    saveCards(allCards.map(c =>
+      c.id === editCard.id
+        ? { ...c, ...buildPayload(), course_name: course?.name || c.course_name }
+        : c
+    ))
+    toast.success('Kart güncellendi.')
+    setEditCard(null)
   }
 
   // ── SHARED FORM ───────────────────────────────────────────────
@@ -264,9 +262,7 @@ export default function AdminContent() {
             </tr>
           </thead>
           <tbody>
-            {isLoading ? (
-              <tr><td colSpan={8} style={{ textAlign:'center', padding:32, color:'var(--t3)' }}>Yükleniyor...</td></tr>
-            ) : cards.length === 0 ? (
+            {cards.length === 0 ? (
               <tr><td colSpan={8} style={{ textAlign:'center', padding:32, color:'var(--t3)' }}>İçerik bulunamadı</td></tr>
             ) : cards.map(c => (
               <tr key={c.id}>
@@ -290,19 +286,23 @@ export default function AdminContent() {
                 </td>
                 <td>
                   <div className={styles.rowActions}>
-                    {c.status === 'pending' ? (
+                    {/* Yayına Al + Reddet: pending veya draft kartlar için */}
+                    {(c.status === 'pending' || c.status === 'draft') && (
                       <>
-                        <button className={styles.ra} title="Onayla"
-                          onClick={() => approveMut.mutate(c.id)}
-                          disabled={approveMut.isPending}>✅</button>
+                        <button className={styles.ra} title="Yayına Al"
+                          onClick={() => doApprove(c.id)}>✅</button>
                         <button className={styles.ra} title="Reddet"
-                          onClick={() => rejectMut.mutate(c.id)}
-                          disabled={rejectMut.isPending}>❌</button>
+                          onClick={() => doReject(c.id)}>❌</button>
                       </>
-                    ) : (
-                      <button className={styles.ra} title="Düzenle"
-                        onClick={() => openEdit(c)}>✏️</button>
                     )}
+                    {/* Yeniden Onayla: reddedilen kartlar için */}
+                    {c.status === 'rejected' && (
+                      <button className={styles.ra} title="Yayına Al"
+                        onClick={() => doApprove(c.id)}>✅</button>
+                    )}
+                    {/* Düzenle: her kart için */}
+                    <button className={styles.ra} title="Düzenle"
+                      onClick={() => openEdit(c)}>✏️</button>
                     <button className={styles.ra} title="Sil" style={{ color:'#FF8090' }}
                       onClick={() => setDeleteCard(c)}>🗑️</button>
                   </div>
@@ -320,8 +320,8 @@ export default function AdminContent() {
           <button className={`${styles.btn} ${styles.btnOutline}`} style={{ flex:1 }}
             onClick={() => setNewOpen(false)}>İptal</button>
           <button className={`${styles.btn} ${styles.btnPrimary}`} style={{ flex:1 }}
-            onClick={handleCreate} disabled={createMut.isPending}>
-            {createMut.isPending ? 'Kaydediliyor...' : 'Oluştur'}
+            onClick={handleCreate}>
+            Oluştur
           </button>
         </div>
       </Modal>
@@ -333,8 +333,8 @@ export default function AdminContent() {
           <button className={`${styles.btn} ${styles.btnOutline}`} style={{ flex:1 }}
             onClick={() => setEditCard(null)}>İptal</button>
           <button className={`${styles.btn} ${styles.btnPrimary}`} style={{ flex:1 }}
-            onClick={handleUpdate} disabled={updateMut.isPending}>
-            {updateMut.isPending ? 'Kaydediliyor...' : 'Kaydet'}
+            onClick={handleUpdate}>
+            Kaydet
           </button>
         </div>
       </Modal>
@@ -343,7 +343,7 @@ export default function AdminContent() {
       <ConfirmModal
         open={!!deleteCard}
         onClose={() => setDeleteCard(null)}
-        onConfirm={() => deleteMut.mutate(deleteCard.id)}
+        onConfirm={() => doDelete(deleteCard.id)}
         title="Kartı Sil"
         message={`"${deleteCard?.question?.slice(0, 60)}..." kartını kalıcı olarak silmek istediğinize emin misiniz?`}
         confirmLabel="Evet, Sil"
