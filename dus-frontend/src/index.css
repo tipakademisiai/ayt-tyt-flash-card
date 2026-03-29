@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  height: 100%;
+  font-family: 'Montserrat', sans-serif;
+}
+
+body {
+  transition: background 0.3s, color 0.3s;
+}
+
+body.dark {
+  background: linear-gradient(160deg, #080f1e 0%, #0a1e35 50%, #080f1e 100%);
+  color: #fff;
+  --t1: #fff;
+  --t2: rgba(255,255,255,.6);
+  --t3: rgba(255,255,255,.35);
+  --card: rgba(255,255,255,.07);
+  --border: rgba(255,255,255,.12);
+  --hover: rgba(255,255,255,.07);
+  --sidebar: #0a1628;
+  --input: rgba(255,255,255,.05);
+  --inputborder: rgba(255,255,255,.12);
+  --bg: #080f1e;
+}
+
+body.light {
+  background: linear-gradient(160deg, #EEF4F9 0%, #F5F9FC 50%, #EEF4F9 100%);
+  color: #0D1B2A;
+  --t1: #0D1B2A;
+  --t2: rgba(13,27,42,.65);
+  --t3: rgba(13,27,42,.4);
+  --card: rgba(255,255,255,.9);
+  --border: rgba(0,100,180,.12);
+  --hover: rgba(0,0,0,.04);
+  --sidebar: #fff;
+  --input: rgba(0,0,0,.04);
+  --inputborder: rgba(0,100,180,.15);
+  --bg: #EEF4F9;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+a { text-decoration: none; color: inherit; }
+button { font-family: 'Montserrat', sans-serif; }
+select { font-family: 'Montserrat', sans-serif; color: var(--t2); background: var(--input); border: 1px solid var(--inputborder); }
+
+/* Blob animations */
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+.blob1 {
+  top: -120px; left: -80px;
+  width: 380px; height: 380px;
+  animation: blobF 9s ease-in-out infinite;
+}
+.blob2 {
+  bottom: -80px; right: -60px;
+  width: 320px; height: 320px;
+  animation: blobF 11s ease-in-out infinite reverse;
+}
+body.dark .blob1 { background: radial-gradient(circle, rgba(0,170,221,.14) 0%, transparent 70%); }
+body.light .blob1 { background: radial-gradient(circle, rgba(0,170,221,.08) 0%, transparent 70%); }
+body.dark .blob2 { background: radial-gradient(circle, rgba(139,18,35,.12) 0%, transparent 70%); }
+body.light .blob2 { background: radial-gradient(circle, rgba(139,18,35,.07) 0%, transparent 70%); }
+
+@keyframes blobF {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(20px, 15px) scale(1.08); }
+}
