@@ -5,17 +5,17 @@ import styles from '../../styles/shared.module.css'
 import toast from 'react-hot-toast'
 
 const STATS = [
-  { name:'Periodonsiyum Anatomisi', pct:82, color:'linear-gradient(90deg,#0088BB,#00AADD)' },
-  { name:'Hastalık Sınıflaması',    pct:74, color:'linear-gradient(90deg,#0088BB,#00AADD)' },
-  { name:'Periodontitis',           pct:65, color:'linear-gradient(90deg,#0088BB,#00AADD)' },
-  { name:'Tedavi Protokolleri',     pct:58, color:'linear-gradient(90deg,#F5A020,#F5C842)' },
-  { name:'Destekleyici Tedavi',     pct:44, color:'linear-gradient(90deg,#E05070,#FF8090)' },
+  { name:'Türkçe (TYT)',             pct:82, color:'linear-gradient(90deg,#0088BB,#00AADD)' },
+  { name:'Matematik (TYT)',          pct:74, color:'linear-gradient(90deg,#0088BB,#00AADD)' },
+  { name:'Fen Bilimleri (TYT)',      pct:65, color:'linear-gradient(90deg,#7C3AED,#A78BFA)' },
+  { name:'AYT Matematik',            pct:58, color:'linear-gradient(90deg,#F5A020,#F5C842)' },
+  { name:'Fen Bilimleri (AYT)',      pct:44, color:'linear-gradient(90deg,#E05070,#FF8090)' },
 ]
 
 const QUESTIONS = [
-  { initials:'ZŞ', name:'Dr. Zeynep Şahin', text:'Furkasyon tutulumunda Hamp II ile III arasındaki fark?', time:'2 dk', unread:true, bg:'linear-gradient(135deg,#00AADD,#0055AA)' },
-  { initials:'MK', name:'Mehmet Kılıç',     text:'SRP ile gingivektomi arasındaki endikasyon farkı?',     time:'45 dk', unread:true, bg:'linear-gradient(135deg,#A78BFA,#7C3AED)' },
-  { initials:'AY', name:'Ayşe Yıldırım',    text:'Sondajda kanama neden aktif inflamasyon göstergesidir?', time:'3 sa', unread:false, bg:'linear-gradient(135deg,#10B981,#059669)' },
+  { initials:'ZŞ', name:'Zeynep Şahin',  text:'TYT Matematik — Problemler konusunda nereden başlamalıyım?', time:'2 dk', unread:true, bg:'linear-gradient(135deg,#00AADD,#0055AA)' },
+  { initials:'MK', name:'Mehmet Kılıç',  text:'AYT Fizik — Elektrik ve manyetizma arasındaki fark nedir?',  time:'45 dk', unread:true, bg:'linear-gradient(135deg,#A78BFA,#7C3AED)' },
+  { initials:'AY', name:'Ayşe Yıldırım', text:'Türkçe paragraf sorularında zaman yönetimi nasıl olmalı?',   time:'3 sa', unread:false, bg:'linear-gradient(135deg,#10B981,#059669)' },
 ]
 
 export default function TrainerDashboard() {
@@ -26,7 +26,7 @@ export default function TrainerDashboard() {
     <div>
       <PageTopbar
         title={`Merhaba, ${user?.first_name || 'Dr.'} 👋`}
-        subtitle={`${user?.branch || 'Periodontoloji'} branşı — bugünkü durum`}>
+        subtitle={`${user?.branch || 'TYT/AYT'} — bugünkü durum`}>
         <button className={`${styles.btn} ${styles.btnPrimary}`}
           onClick={() => navigate('/trainer/cards')}>+ Yeni Kart</button>
       </PageTopbar>

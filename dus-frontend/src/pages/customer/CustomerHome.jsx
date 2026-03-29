@@ -95,7 +95,7 @@ export default function CustomerHome() {
           border:'1px solid rgba(0,170,221,.28)'}}
         onMouseEnter={e => e.currentTarget.style.transform='scale(1.01)'}
         onMouseLeave={e => e.currentTarget.style.transform=''}>
-        <div style={{fontSize:10,fontWeight:600,letterSpacing:'.1em',textTransform:'uppercase',marginBottom:4,color:'rgba(255,255,255,.5)'}}>👋 Hoş geldin, Dr. Adayı</div>
+        <div style={{fontSize:10,fontWeight:600,letterSpacing:'.1em',textTransform:'uppercase',marginBottom:4,color:'rgba(255,255,255,.5)'}}>👋 Hoş geldin, YKS Adayı</div>
         <div style={{fontSize:18,fontWeight:800,color:'white',lineHeight:1.3,marginBottom:16}}>AYT/TYT'ye hazırlıkta<br/>bugün ne çalışıyorsun?</div>
         <div style={{display:'flex',justifyContent:'center',marginBottom:16}}>
           {[{v:'847',l:'Toplam kart'},{v:'12 🔥',l:'Gün serisi'},{v:'%61',l:'Başarı'},{v:'234',l:'Bekliyor'}].map((s,i,a) => (

@@ -8,12 +8,14 @@ import toast from 'react-hot-toast'
 const MONTHS = ['Eyl','Eki','Kas','Ara','Oca','Şub','Mar']
 
 const COURSE_STATS = [
-  { name:'Periodontoloji', pct:78, color:'linear-gradient(90deg,#0088BB,#00AADD)' },
-  { name:'Endodonti',      pct:72, color:'linear-gradient(90deg,#7C3AED,#A78BFA)' },
-  { name:'Anatomi',        pct:65, color:'linear-gradient(90deg,#059669,#10B981)' },
-  { name:'Ortodonti',      pct:60, color:'linear-gradient(90deg,#D97706,#F5C842)' },
-  { name:'Farmakoloji',    pct:52, color:'linear-gradient(90deg,#9D174D,#E05070)' },
-  { name:'Mikrobiyoloji',  pct:48, color:'linear-gradient(90deg,#0055AA,#00AADD)' },
+  { name:'Türkçe (TYT)',             pct:78, color:'linear-gradient(90deg,#0088BB,#00AADD)' },
+  { name:'Matematik (TYT)',          pct:72, color:'linear-gradient(90deg,#7C3AED,#A78BFA)' },
+  { name:'Fen Bilimleri (TYT)',      pct:65, color:'linear-gradient(90deg,#059669,#10B981)' },
+  { name:'Sosyal Bilimler (TYT)',    pct:60, color:'linear-gradient(90deg,#D97706,#F5C842)' },
+  { name:'Matematik (AYT)',          pct:55, color:'linear-gradient(90deg,#0055AA,#00AADD)' },
+  { name:'Fen Bilimleri (AYT)',      pct:52, color:'linear-gradient(90deg,#9D174D,#E05070)' },
+  { name:'Edebiyat – Sosyal Bil. 1', pct:48, color:'linear-gradient(90deg,#E05070,#FF8090)' },
+  { name:'Sosyal Bilimler 2 (AYT)',  pct:44, color:'linear-gradient(90deg,#A78BFA,#7C3AED)' },
 ]
 
 export default function AdminReports() {

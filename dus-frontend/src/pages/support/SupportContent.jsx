@@ -3,10 +3,10 @@ import styles from '../../styles/shared.module.css'
 import toast from 'react-hot-toast'
 
 const CARDS = [
-  { q:'Baş-boyun anatomisi — sinir çıkış delikleri', course:'Anatomi',  trainer:'Dr. A. Yıldırım', status:'error',     usage:412 },
-  { q:'Periodontitis tedavisinde ilk basamak',       course:'Perio',    trainer:'Dr. M. Kaya',     status:'published', usage:847 },
-  { q:'Antibiyotik endikasyonları — güncel kılavuz', course:'Farma',    trainer:'Dr. S. Bayraktar', status:'update',    usage:234 },
-  { q:'Pulpa anatomisi — kök kanal sayısı',          course:'Endo',     trainer:'Dr. H. Coşkun',   status:'pending',   usage:0 },
+  { q:'Türkçe — Paragrafta ana fikir ve yardımcı düşünce', course:'Türkçe (TYT)',        trainer:'A. Yıldırım', status:'error',     usage:412 },
+  { q:'Matematik — Kareler farkı ve özdeşlikler',           course:'Matematik (TYT)',     trainer:'M. Kaya',     status:'published', usage:847 },
+  { q:'Fen Bilimleri — Newton yasaları ve örnekler',        course:'Fen Bil. (TYT)',      trainer:'S. Bayraktar', status:'update',   usage:234 },
+  { q:'AYT Türev — Zincir kuralı uygulamaları',             course:'Matematik (AYT)',     trainer:'H. Coşkun',   status:'pending',   usage:0 },
 ]
 
 const STATUS_INFO = {
@@ -35,7 +35,7 @@ export default function SupportContent() {
           searchPlaceholder="Kart ara..."
           onSearch={() => {}}
           selects={[
-            { options:['Tüm Dersler','Periodontoloji','Endodonti','Anatomi'], onChange:()=>{} },
+            { options:['Tüm Dersler','Türkçe (TYT)','Matematik (TYT)','Fen Bilimleri (TYT)','Sosyal Bilimler (TYT)','Fen Bilimleri (AYT)','Matematik (AYT)','Edebiyat – Sosyal Bil. 1','Sosyal Bilimler 2 (AYT)'], onChange:()=>{} },
             { options:['Tüm Durumlar','Yayında','Onay Bekliyor','Hata Bildirilen'], onChange:()=>{} },
           ]}
         />

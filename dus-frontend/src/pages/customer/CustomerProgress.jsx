@@ -1,18 +1,20 @@
 import { ThemeToggle } from '../../components/shared'
 
 const COURSE_STATS = [
-  { name:'Türkçe',            pct:78, color:'linear-gradient(90deg,#0088BB,#00AADD)' },
-  { name:'AYT Matematik',     pct:60, color:'linear-gradient(90deg,#0088BB,#00AADD)' },
-  { name:'TYT Fen Bilimleri', pct:65, color:'linear-gradient(90deg,#7C3AED,#A78BFA)' },
-  { name:'Sosyal Bilimler',   pct:38, color:'linear-gradient(90deg,#D97706,#F5C842)' },
-  { name:'AYT Fen Bilimleri', pct:20, color:'linear-gradient(90deg,#9D174D,#E05070)' },
-  { name:'Edebiyat–Sosyal 1', pct:30, color:'linear-gradient(90deg,#E05070,#FF8090)' },
+  { name:'Türkçe (TYT)',              pct:78, color:'linear-gradient(90deg,#0088BB,#00AADD)' },
+  { name:'Matematik (TYT)',           pct:65, color:'linear-gradient(90deg,#0088BB,#00AADD)' },
+  { name:'Fen Bilimleri (TYT)',       pct:60, color:'linear-gradient(90deg,#7C3AED,#A78BFA)' },
+  { name:'Sosyal Bilimler (TYT)',     pct:38, color:'linear-gradient(90deg,#D97706,#F5C842)' },
+  { name:'Fen Bilimleri (AYT)',       pct:20, color:'linear-gradient(90deg,#9D174D,#E05070)' },
+  { name:'Matematik (AYT)',           pct:45, color:'linear-gradient(90deg,#059669,#10B981)' },
+  { name:'Edebiyat – Sosyal Bil. 1',  pct:30, color:'linear-gradient(90deg,#E05070,#FF8090)' },
+  { name:'Sosyal Bilimler 2 (AYT)',   pct:25, color:'linear-gradient(90deg,#0055AA,#00AADD)' },
 ]
 
 const QUIZ_HISTORY = [
-  { name:'Türkçe',          score:90, conf:4.2, cards:20, when:'Bugün',      scoreC:'#10B981' },
-  { name:'TYT Matematik',   score:67, conf:2.8, cards:18, when:'Dün',         scoreC:'#F5A020' },
-  { name:'AYT Fen',         score:42, conf:1.9, cards:12, when:'2 gün önce',  scoreC:'#E05070' },
+  { name:'Türkçe (TYT)',        score:90, conf:4.2, cards:20, when:'Bugün',      scoreC:'#10B981' },
+  { name:'Matematik (TYT)',     score:67, conf:2.8, cards:18, when:'Dün',         scoreC:'#F5A020' },
+  { name:'Fen Bilimleri (AYT)', score:42, conf:1.9, cards:12, when:'2 gün önce',  scoreC:'#E05070' },
 ]
 
 export default function CustomerProgress() {

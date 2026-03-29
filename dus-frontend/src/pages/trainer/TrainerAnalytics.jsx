@@ -3,17 +3,17 @@ import styles from '../../styles/shared.module.css'
 import toast from 'react-hot-toast'
 
 const ERROR_CARDS = [
-  { name:'Destekleyici periodontal tedavi sıklığı', pct:68, color:'#E05070' },
-  { name:'Furkasyon sınıflaması — Hamp III',        pct:61, color:'#E05070' },
-  { name:'Antibiyotik endikasyonları',               pct:54, color:'#F5C842' },
-  { name:'Kemik defekti duvar sayısı',               pct:48, color:'#F5C842' },
-  { name:'Periodontal ligament fonksiyonları',       pct:32, color:'#10B981' },
+  { name:'Türkçe — Paragraf anlam soruları', pct:68, color:'#E05070' },
+  { name:'Matematik (TYT) — Problemler',     pct:61, color:'#E05070' },
+  { name:'Fen Bilimleri — Kimya denklemleri', pct:54, color:'#F5C842' },
+  { name:'AYT Matematik — Türev uygulaması',  pct:48, color:'#F5C842' },
+  { name:'Sosyal Bilimler — Felsefe',         pct:32, color:'#10B981' },
 ]
 
 export default function TrainerAnalytics() {
   return (
     <div>
-      <PageTopbar title="Branş Analitiği" subtitle="Periodontoloji — öğrenci performansı ve içerik istatistikleri">
+      <PageTopbar title="Branş Analitiği" subtitle="TYT/AYT — öğrenci performansı ve içerik istatistikleri">
         <button className={`${styles.btn} ${styles.btnOutline}`} onClick={() => toast('Rapor indiriliyor...')}>📥 Rapor</button>
       </PageTopbar>
 
@@ -34,7 +34,7 @@ export default function TrainerAnalytics() {
           ))}
           <div style={{marginTop:8,padding:10,borderRadius:10,background:'rgba(224,80,112,.08)',border:'1px solid rgba(224,80,112,.15)'}}>
             <div style={{fontSize:11,fontWeight:600,color:'var(--t1)',marginBottom:4}}>💡 Öneri</div>
-            <div style={{fontSize:10,color:'var(--t3)'}}>Destekleyici periodontal tedavi kartlarını güncelle ve açıklama ekle</div>
+            <div style={{fontSize:10,color:'var(--t3)'}}>Türkçe paragraf anlam sorularını güncelle ve örnek açıklama ekle</div>
           </div>
         </div>
 

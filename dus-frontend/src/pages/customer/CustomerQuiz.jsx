@@ -91,7 +91,7 @@ function AIQuestionModal({ question, onClose }) {
   )
 }
 
-// ── DUS SORUSU MODAL ──────────────────────────────────────────
+// ── YKS SORUSU MODAL ──────────────────────────────────────────
 function DUSQuestionModal({ question, onClose }) {
   const [selected, setSelected] = useState(null)
   const answered = selected !== null
@@ -116,7 +116,7 @@ function DUSQuestionModal({ question, onClose }) {
           <div>
             <div style={{ fontSize:10, fontWeight:700, letterSpacing:'.08em', textTransform:'uppercase',
               color:'rgba(245,200,66,.8)', marginBottom:2 }}>
-              GERÇEK DUS SORUSU · {question.year} {question.source && `· ${question.source}`}
+              GERÇEK YKS SORUSU · {question.year} {question.source && `· ${question.source}`}
             </div>
             <div style={{ fontSize:13, fontWeight:800, color:'var(--t1)' }}>Sınavdan Çıkmış</div>
           </div>
@@ -260,13 +260,13 @@ export default function CustomerQuiz() {
   }
 
   const handleDUSQuestion = async () => {
-    if (!current?.id) return toast('Bu kart için DUS sorusu bulunamadı.', { icon:'ℹ️' })
+    if (!current?.id) return toast('Bu kart için YKS sorusu bulunamadı.', { icon:'ℹ️' })
     setDusLoading(true)
     try {
       const { data } = await cardExtrasAPI.dusQuestion(current.id)
       setDusQuestion(data)
     } catch (e) {
-      const msg = e?.response?.data?.detail || 'Bu bölüm için henüz DUS sorusu eklenmemiş.'
+      const msg = e?.response?.data?.detail || 'Bu bölüm için henüz YKS sorusu eklenmemiş.'
       toast(msg, { icon:'📚' })
     } finally {
       setDusLoading(false)
@@ -439,12 +439,12 @@ export default function CustomerQuiz() {
             {aiLoading ? '...' : '🤖 Soru Üret'}
           </button>
           <button onClick={handleDUSQuestion} disabled={dusLoading}
-            title="Bu bölümden gerçek DUS sorusu"
+            title="Bu bölümden gerçek YKS sorusu"
             style={{ display:'flex', alignItems:'center', gap:5, padding:'6px 11px',
               borderRadius:10, border:'1px solid rgba(245,200,66,.3)',
               background:'rgba(245,200,66,.1)', color:'#F5C842',
               fontFamily:'Montserrat', fontSize:10, fontWeight:700, cursor:'pointer', transition:'all .18s' }}>
-            {dusLoading ? '...' : '📋 DUS Sorusu'}
+            {dusLoading ? '...' : '📋 YKS Sorusu'}
           </button>
         </div>
       </div>

@@ -8,6 +8,15 @@ import { COURSE_ICON_MAP } from '../../data/courseIcons'
 import { ThemeToggle } from '../../components/shared'
 import styles from '../../styles/shared.module.css'
 
+const MOCK_IMAGE_CARDS = [
+  { id:1, title:'Türkçe — Cümle Yapısı', description:'Özne, yüklem, nesne ilişkisi', course_name:'Türkçe (TYT)', chapter_name:'Paragraf', status:'published', image_url:null },
+  { id:2, title:'Matematik — Kareler Farkı', description:'(a+b)(a-b) = a²-b²', course_name:'Matematik (TYT)', chapter_name:'Temel Matematik', status:'published', image_url:null },
+  { id:3, title:'Fizik — Newton Yasaları', description:'F=ma, Eylemsizlik', course_name:'Fen Bilimleri (TYT)', chapter_name:'Fizik', status:'published', image_url:null },
+  { id:4, title:'Biyoloji — Hücre', description:'Mitoz ve Mayoz farkları', course_name:'Fen Bilimleri (TYT)', chapter_name:'Biyoloji', status:'published', image_url:null },
+  { id:5, title:'AYT Türev', description:'Türev tanımı ve kuralları', course_name:'Matematik (AYT)', chapter_name:'Matematik', status:'published', image_url:null },
+  { id:6, title:'AYT Edebiyat', description:'Tanzimat dönemi özellikleri', course_name:'Edebiyat – Sosyal Bil. 1', chapter_name:'Türk Dili ve Edebiyatı', status:'published', image_url:null },
+]
+
 // ── Pro Gate ─────────────────────────────────────────────────────────────────
 function ProGate() {
   const navigate = useNavigate()
@@ -100,11 +109,19 @@ function CardViewer({ cards, onDone }) {
           }}
           onClick={() => setShowDesc(v => !v)}
         >
-          <img
-            src={card.image_url}
-            alt={card.title}
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-          />
+          {card.image_url ? (
+            <img
+              src={card.image_url}
+              alt={card.title}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+          ) : (
+            <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg,rgba(0,80,140,.4),rgba(0,170,221,.2))' }}>
+              <div style={{ fontSize: 48, marginBottom: 8 }}>🖼️</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,.6)' }}>Görsel yükleniyor...</div>
+            </div>
+          )}
           {/* Tap hint overlay */}
           {!showDesc && (
             <div style={{
@@ -373,10 +390,11 @@ export default function CustomerImageCards() {
 
   const isPro = user?.subscription === 'pro'
 
-  const { data: cardsResp, isLoading, error } = useQuery({
+  const { data: cardsResp, isLoading, error, isError } = useQuery({
     queryKey: ['image-cards', courseFilter],
     queryFn: () => imageCardsAPI.list({ course: courseFilter || undefined }).then(r => r.data),
     enabled: isPro && phase === 'browse',
+    retry: 1,
   })
 
   const { data: coursesData } = useQuery({
@@ -388,9 +406,14 @@ export default function CustomerImageCards() {
       return Object.values(map)
     }),
     enabled: isPro,
+    retry: 1,
   })
 
-  const cards = cardsResp?.results ?? cardsResp ?? []
+  const rawCards = cardsResp?.results ?? cardsResp ?? []
+  const filteredMock = courseFilter
+    ? MOCK_IMAGE_CARDS.filter(c => c.course_name?.toLowerCase().includes(courseFilter === 'tyt' ? 'tyt' : courseFilter === 'ayt' ? 'ayt' : courseFilter))
+    : MOCK_IMAGE_CARDS
+  const cards = (isError || rawCards.length === 0) ? filteredMock : rawCards
   const courses = coursesData ?? []
 
   const startSession = () => {
@@ -507,12 +530,17 @@ export default function CustomerImageCards() {
                     borderRadius: 14, overflow: 'hidden',
                     background: 'var(--card)', border: '1px solid var(--border)',
                   }}>
-                    <div style={{ width: '100%', aspectRatio: '3/2', overflow: 'hidden', background: 'var(--border)' }}>
-                      <img
-                        src={card.image_url}
-                        alt={card.title}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                      />
+                    <div style={{ width: '100%', aspectRatio: '3/2', overflow: 'hidden', background: 'var(--border)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {card.image_url ? (
+                        <img
+                          src={card.image_url}
+                          alt={card.title}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                        />
+                      ) : (
+                        <div style={{ fontSize: 28, opacity: 0.4 }}>🖼️</div>
+                      )}
                     </div>
                     <div style={{ padding: '8px 10px' }}>
                       <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--t1)', lineHeight: 1.3 }}>

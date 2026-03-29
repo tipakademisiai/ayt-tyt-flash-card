@@ -99,11 +99,12 @@ export default function AdminDashboard() {
         <div className={styles.card}>
           <div style={{ fontSize:13, fontWeight:800, color:'var(--t1)', marginBottom:14 }}>Ders Dağılımı</div>
           {[
-            { name:'Periodontoloji', pct:28, color:'#00AADD' },
-            { name:'Endodonti',      pct:22, color:'#A78BFA' },
-            { name:'Anatomi',        pct:18, color:'#10B981' },
-            { name:'Ortodonti',      pct:16, color:'#F5C842' },
-            { name:'Diğer',          pct:16, color:'#E05070' },
+            { name:'Türkçe (TYT)',        pct:24, color:'#00AADD' },
+            { name:'Matematik (TYT)',      pct:22, color:'#A78BFA' },
+            { name:'Fen Bilimleri (TYT)',  pct:18, color:'#10B981' },
+            { name:'AYT Matematik',        pct:20, color:'#F5C842' },
+            { name:'Fen Bil. (AYT)',       pct:10, color:'#E05070' },
+            { name:'Diğer',               pct:6,  color:'#9CA3AF' },
           ].map(item => (
             <div key={item.name} className={styles.hbar}>
               <div className={styles.hbarLabel}>{item.name}</div>
