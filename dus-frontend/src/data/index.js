@@ -1,16 +1,68 @@
 // ── TYT / AYT Bölümleri ─────────────────────────────────────
 export const TYT_BOLUMLER = [
-  { id: 1, slug: 'turkce',      name: 'Türkçe',         cards: 120, done: 0, pending: 0, srs: [0,0,0,0,0] },
-  { id: 2, slug: 'tyt-matematik', name: 'Matematik',    cards: 100, done: 0, pending: 0, srs: [0,0,0,0,0] },
-  { id: 3, slug: 'tyt-fen',     name: 'Fen Bilimleri',  cards: 90,  done: 0, pending: 0, srs: [0,0,0,0,0] },
-  { id: 4, slug: 'tyt-sosyal',  name: 'Sosyal Bilimler',cards: 80,  done: 0, pending: 0, srs: [0,0,0,0,0] },
+  { id: 1, slug: 'turkce', name: 'Türkçe', cards: 120, done: 0, pending: 0, srs: [0,0,0,0,0],
+    dersler: [
+      { slug: 'turkce-paragraf',      name: 'Paragraf',      cards: 40 },
+      { slug: 'turkce-dilbilgisi',    name: 'Dil Bilgisi',   cards: 40 },
+      { slug: 'turkce-anlambilgisi',  name: 'Anlam Bilgisi', cards: 40 },
+    ]
+  },
+  { id: 2, slug: 'tyt-matematik', name: 'Matematik', cards: 100, done: 0, pending: 0, srs: [0,0,0,0,0],
+    dersler: [
+      { slug: 'tyt-mat-temel',    name: 'Temel Matematik', cards: 35 },
+      { slug: 'tyt-mat-problem',  name: 'Problemler',      cards: 35 },
+      { slug: 'tyt-mat-geometri', name: 'Geometri',        cards: 30 },
+    ]
+  },
+  { id: 3, slug: 'tyt-fen', name: 'Fen Bilimleri', cards: 90, done: 0, pending: 0, srs: [0,0,0,0,0],
+    dersler: [
+      { slug: 'tyt-fizik',    name: 'Fizik',    cards: 30 },
+      { slug: 'tyt-kimya',    name: 'Kimya',    cards: 30 },
+      { slug: 'tyt-biyoloji', name: 'Biyoloji', cards: 30 },
+    ]
+  },
+  { id: 4, slug: 'tyt-sosyal', name: 'Sosyal Bilimler', cards: 80, done: 0, pending: 0, srs: [0,0,0,0,0],
+    dersler: [
+      { slug: 'tyt-tarih',    name: 'Tarih',                          cards: 20 },
+      { slug: 'tyt-cografya', name: 'Coğrafya',                       cards: 20 },
+      { slug: 'tyt-felsefe',  name: 'Felsefe',                        cards: 20 },
+      { slug: 'tyt-din',      name: 'Din Kültürü ve Ahlak Bilgisi',   cards: 20 },
+    ]
+  },
 ]
 
 export const AYT_BOLUMLER = [
-  { id: 5, slug: 'ayt-fen',             name: 'Fen Bilimleri',               cards: 110, done: 0, pending: 0, srs: [0,0,0,0,0] },
-  { id: 6, slug: 'ayt-matematik',       name: 'Matematik',                   cards: 95,  done: 0, pending: 0, srs: [0,0,0,0,0] },
-  { id: 7, slug: 'ayt-edebiyat-sosyal1',name: 'Edebiyat – Sosyal Bil. 1',    cards: 85,  done: 0, pending: 0, srs: [0,0,0,0,0] },
-  { id: 8, slug: 'ayt-sosyal2',         name: 'Sosyal Bilimler 2',           cards: 100, done: 0, pending: 0, srs: [0,0,0,0,0] },
+  { id: 5, slug: 'ayt-fen', name: 'Fen Bilimleri', cards: 110, done: 0, pending: 0, srs: [0,0,0,0,0],
+    dersler: [
+      { slug: 'ayt-fizik',    name: 'Fizik',    cards: 37 },
+      { slug: 'ayt-kimya',    name: 'Kimya',    cards: 37 },
+      { slug: 'ayt-biyoloji', name: 'Biyoloji', cards: 36 },
+    ]
+  },
+  { id: 6, slug: 'ayt-matematik', name: 'Matematik', cards: 95, done: 0, pending: 0, srs: [0,0,0,0,0],
+    dersler: [
+      { slug: 'ayt-mat-matematik', name: 'Matematik', cards: 50 },
+      { slug: 'ayt-mat-geometri',  name: 'Geometri',  cards: 45 },
+    ]
+  },
+  { id: 7, slug: 'ayt-edebiyat-sosyal1', name: 'Edebiyat – Sosyal Bil. 1', cards: 85, done: 0, pending: 0, srs: [0,0,0,0,0],
+    dersler: [
+      { slug: 'ayt-edebiyat',  name: 'Türk Dili ve Edebiyatı', cards: 30 },
+      { slug: 'ayt-tarih1',    name: 'Tarih-1',                cards: 28 },
+      { slug: 'ayt-cografya1', name: 'Coğrafya-1',             cards: 27 },
+    ]
+  },
+  { id: 8, slug: 'ayt-sosyal2', name: 'Sosyal Bilimler 2', cards: 100, done: 0, pending: 0, srs: [0,0,0,0,0],
+    dersler: [
+      { slug: 'ayt-tarih2',    name: 'Tarih-2',                        cards: 16 },
+      { slug: 'ayt-cografya2', name: 'Coğrafya-2',                     cards: 14 },
+      { slug: 'ayt-felsefe',   name: 'Felsefe',                        cards: 14 },
+      { slug: 'ayt-psikoloji', name: 'Psikoloji',                      cards: 14 },
+      { slug: 'ayt-sosyoloji', name: 'Sosyoloji',                      cards: 14 },
+      { slug: 'ayt-mantik',    name: 'Mantık',                         cards: 14 },
+      { slug: 'ayt-din',       name: 'Din Kültürü ve Ahlak Bilgisi',   cards: 14 },
+    ]
+  },
 ]
 
 export const ALL_DERSLER = [...TYT_BOLUMLER, ...AYT_BOLUMLER]
@@ -89,69 +141,148 @@ export const QUIZ_CARDS = [
   { id: 10, q: 'Biyoloji\'de DNA replikasyonu neden semi-konservatiftir?', a: 'Çift sarmalın her ipliği kalıp olarak kullanılır; yeni molekülün biri eski biri yeni iplikten oluşur.' },
 ]
 
-// ── Flash Kartları (her bölüm için örnek kartlar) ───────────────────
+// ── Flash Kartları (her ders için örnek kartlar) ───────────────────
 export const DECK_CARDS = {
-  'turkce': [
-    { id:'tr1', q:'Paragrafta ana fikir ile yardımcı fikir arasındaki fark?', a:'Ana fikir paragrafın bütününü kapsayan temel düşüncedir; yardımcı fikirler onu destekler.' },
-    { id:'tr2', q:'Öznel ve nesnel cümle arasındaki fark?', a:'Nesnel cümle kanıtlanabilir gerçekleri; öznel cümle kişisel görüş ve duyguları içerir.' },
-    { id:'tr3', q:'Ad tamlaması türleri nelerdir?', a:'Belirtili (tamlayan ek alır), belirtisiz (tamlayan eksiz), zincirleme (üçlü+).' },
-    { id:'tr4', q:'Fiilimsi türleri?', a:'İsim-fiil (-mak/-mek,-ma/-me,-iş), sıfat-fiil (-an,-dik,-ecek vs.), zarf-fiil (-arak,-ince,-ip vs.).' },
-    { id:'tr5', q:'Anlatım bozukluğu türleri?', a:'Özne-yüklem uyumsuzluğu, gereksiz sözcük, çelişki, anlam belirsizliği başlıcalarıdır.' },
+  // TYT Türkçe
+  'turkce-paragraf': [
+    { id:'tp1', q:'Paragrafta ana fikir nerede bulunur?', a:'Genellikle başta veya sonda; bazen tümüne yayılır.' },
+    { id:'tp2', q:'Yardımcı fikir nedir?', a:'Ana fikri destekleyen, açıklayan veya örnekleyen cümlelerdir.' },
+    { id:'tp3', q:'"Konu" ile "Ana fikir" farkı?', a:'Konu tek sözcük/öbek; ana fikir tam cümleyle ifade edilir.' },
   ],
-  'tyt-matematik': [
-    { id:'tm1', q:'Asal sayı nedir? İlk 5 asal sayıyı say.', a:'Yalnızca 1 ve kendisine bölünebilen sayı. İlk 5: 2, 3, 5, 7, 11.' },
-    { id:'tm2', q:'Kareler farkı formülü?', a:'a² - b² = (a+b)(a-b)' },
-    { id:'tm3', q:'Üçgende iç açılar toplamı?', a:'180°' },
-    { id:'tm4', q:'Yüzde hesabında: 200\'ün %35\'i kaçtır?', a:'70' },
-    { id:'tm5', q:'Hız-zaman-mesafe ilişkisi?', a:'Mesafe = Hız × Zaman' },
+  'turkce-dilbilgisi': [
+    { id:'td1', q:'Fiilimsi türleri nelerdir?', a:'İsim-fiil, sıfat-fiil, zarf-fiil.' },
+    { id:'td2', q:'Ad tamlaması türleri?', a:'Belirtili, belirtisiz, zincirleme.' },
+    { id:'td3', q:'Anlatım bozukluğu türleri?', a:'Özne-yüklem uyumsuzluğu, gereksiz sözcük, anlam belirsizliği.' },
   ],
-  'tyt-fen': [
-    { id:'tf1', q:'Newton\'un 1. Hareket Yasası (Eylemsizlik)?', a:'Üzerine net kuvvet etki etmeyen cisim duruyorsa durur, hareket ediyorsa sabit hızla hareket eder.' },
-    { id:'tf2', q:'Atom numarası neyi ifade eder?', a:'Bir elementin çekirdeğindeki proton sayısını ifade eder.' },
-    { id:'tf3', q:'Fotosentez denklemi?', a:'6CO₂ + 6H₂O + ışık enerjisi → C₆H₁₂O₆ + 6O₂' },
-    { id:'tf4', q:'Ohm Kanunu nedir?', a:'V = I × R (Gerilim = Akım × Direnç)' },
-    { id:'tf5', q:'pH değeri 7\'den küçük olan maddeler?', a:'Asidik maddelerdir (örn. limon suyu pH≈2).' },
+  'turkce-anlambilgisi': [
+    { id:'ta1', q:'Mecaz anlam nedir?', a:'Sözcüğün gerçek anlamı dışında kullanılmasıdır.' },
+    { id:'ta2', q:'Deyim nedir?', a:'En az iki sözcükten oluşan, gerçek anlamından uzaklaşmış kalıplaşmış söz.' },
+    { id:'ta3', q:'Atasözü ile deyim farkı?', a:'Atasözü yargı bildirir; deyim yalnızca anlam aktarır.' },
   ],
-  'tyt-sosyal': [
-    { id:'ts1', q:'Osmanlı Devleti\'nin kuruluş tarihi?', a:'1299 — Osman Bey tarafından kurulmuştur.' },
-    { id:'ts2', q:'Türkiye\'nin en uzun nehri?', a:'Kızılırmak (1355 km).' },
-    { id:'ts3', q:'Felsefi şüphecilik (septisizm) nedir?', a:'Kesin bilgiye ulaşılamayacağını savunan felsefi tutum.' },
-    { id:'ts4', q:'Din Kültürü: İslam\'ın 5 şartı nelerdir?', a:'Kelime-i şehadet, namaz, oruç, zekât, hac.' },
-    { id:'ts5', q:'İkinci Dünya Savaşı\'nın bitiş yılı?', a:'1945.' },
+  // TYT Matematik
+  'tyt-mat-temel': [
+    { id:'tm1', q:'Kareler farkı formülü?', a:'a² - b² = (a+b)(a-b)' },
+    { id:'tm2', q:'EBOB × EKOK = ?', a:'İki sayının çarpımına eşittir.' },
+    { id:'tm3', q:'Mutlak değer |x| tanımı?', a:'x≥0 ise x, x<0 ise -x.' },
   ],
-  'ayt-fen': [
-    { id:'af1', q:'Elektromanyetik indüksiyon yasası (Faraday)?', a:'Değişen manyetik akı, iletken devreden EMK indükler. EMK = -dΦ/dt.' },
-    { id:'af2', q:'Kimyasal denge (Le Chatelier prensibi)?', a:'Sisteme dışarıdan etki edildiğinde denge, bu etkiyi azaltacak yönde kayar.' },
-    { id:'af3', q:'Mendel\'in ayrılma yasası?', a:'Her bireyin, bir karakter için iki aleli vardır; gametler oluşurken bu alleller birbirinden ayrılır.' },
-    { id:'af4', q:'İdeal gaz yasası?', a:'PV = nRT' },
-    { id:'af5', q:'DNA\'nın yapısı: nükleotid bileşenleri?', a:'Fosfat grubu, deoksiriboz şekeri, azotlu baz (Adenin, Timin, Guanin, Sitozin).' },
+  'tyt-mat-problem': [
+    { id:'tp1', q:'Hız-Zaman-Mesafe formülü?', a:'M = H × Z' },
+    { id:'tp2', q:'Yüzde artış formülü?', a:'Yeni değer = Eski × (1 + oran/100)' },
+    { id:'tp3', q:'İşçi havuzu probleminde birlikte tamamlama?', a:'1/A + 1/B = 1/T (T = birlikte tamamlama süresi)' },
   ],
-  'ayt-matematik': [
-    { id:'am1', q:'Türev tanımı?', a:'f\'(x) = lim(h→0) [f(x+h) - f(x)] / h' },
-    { id:'am2', q:'Çember denklemi?', a:'(x-a)² + (y-b)² = r²  —  merkez (a,b), yarıçap r.' },
-    { id:'am3', q:'Toplam sembolü Σ: Σk (k=1\'den n\'e) formülü?', a:'n(n+1)/2' },
-    { id:'am4', q:'sin²x + cos²x = ?', a:'1 (Trigonometrik temel özdeşlik).' },
-    { id:'am5', q:'Permütasyon ve Kombinasyon farkı?', a:'Permütasyonda sıra önemli: P(n,r)=n!/(n-r)!  Kombinasyonda önemsiz: C(n,r)=n!/(r!(n-r)!).' },
+  'tyt-mat-geometri': [
+    { id:'tg1', q:'Üçgende iç açılar toplamı?', a:'180°' },
+    { id:'tg2', q:'Dörtgende iç açılar toplamı?', a:'360°' },
+    { id:'tg3', q:'Dairenin alanı?', a:'A = π × r²' },
   ],
-  'ayt-edebiyat-sosyal1': [
-    { id:'ae1', q:'Tanzimat Edebiyatı\'nın başlangıç yılı ve simgesi?', a:'1839 — Tanzimat Fermanı\'nın ilanıyla başlar.' },
-    { id:'ae2', q:'Kurtuluş Savaşı\'nda Sakarya Meydan Muharebesi tarihi?', a:'1921.' },
-    { id:'ae3', q:'Türkiye\'de Marmara Bölgesi\'nin genel özellikleri?', a:'En kalabalık bölge, sanayisi en gelişmiş, iklim geçiş niteliğindedir.' },
-    { id:'ae4', q:'Divan edebiyatında gazel nedir?', a:'5-15 beyitten oluşan, aşk ve şarap temalarını işleyen nazım biçimi.' },
-    { id:'ae5', q:'Osmanlı\'da Lale Devri hangi dönemdir?', a:'1718-1730 — III. Ahmed döneminde Batı\'ya açılma politikaları.' },
+  // TYT Fen
+  'tyt-fizik': [
+    { id:'tf1', q:'Newton\'un 1. Yasası?', a:'Net kuvvet sıfırsa cisim durur ya da sabit hızla hareket eder.' },
+    { id:'tf2', q:'Ohm Kanunu?', a:'V = I × R' },
+    { id:'tf3', q:'Kinetik enerji formülü?', a:'Ek = ½mv²' },
   ],
-  'ayt-sosyal2': [
-    { id:'as1', q:'1. Dünya Savaşı\'nın nedenleri kısaca?', a:'Milliyetçilik, emperyalizm, ittifak sistemleri, Balkan krizi ve Sarajevo suikastı.' },
-    { id:'as2', q:'Karadeniz\'in genel coğrafi özellikleri?', a:'Yarı kapalı deniz, tuzluluk oranı düşük, Türk Boğazları ile bağlantılıdır.' },
-    { id:'as3', q:'Kant\'ın "kategorik imperatif" ilkesi?', a:'"Eyleminin ilkesinin evrensel yasa olmasını isteyebileceğin şekilde davran."' },
-    { id:'as4', q:'Psikolojide "klasik koşullanma" nedir?', a:'Pavlov: Koşulsuz uyarıcıyla birleştirilen koşullu uyarıcı zamanla aynı tepkiyi doğurur.' },
-    { id:'as5', q:'Sosyolojide "sosyal tabakalaşma" nedir?', a:'Toplumun sınıflara, tabakalara ayrılması; gelir, statü ve güce göre hiyerarşik yapı.' },
+  'tyt-kimya': [
+    { id:'tk1', q:'Atom numarası neyi gösterir?', a:'Proton sayısını.' },
+    { id:'tk2', q:'Mol nedir?', a:'6,022×10²³ tanecik (Avogadro sayısı).' },
+    { id:'tk3', q:'Asit-baz indikatörü turnusol nasıl değişir?', a:'Asitte kırmızı, bazda mavi olur.' },
+  ],
+  'tyt-biyoloji': [
+    { id:'tb1', q:'Fotosentez denklemi?', a:'6CO₂ + 6H₂O + ışık → C₆H₁₂O₆ + 6O₂' },
+    { id:'tb2', q:'Mitoz sonucu kaç hücre?', a:'2 adet diploid (2n) hücre.' },
+    { id:'tb3', q:'Mayoz sonucu kaç hücre?', a:'4 adet haploid (n) hücre.' },
+  ],
+  // TYT Sosyal
+  'tyt-tarih': [
+    { id:'ttar1', q:'Osmanlı\'nın kuruluş yılı?', a:'1299.' },
+    { id:'ttar2', q:'Kurtuluş Savaşı hangi antlaşmayla bitti?', a:'Lozan Antlaşması (1923).' },
+  ],
+  'tyt-cografya': [
+    { id:'tcog1', q:'Türkiye\'nin en uzun nehri?', a:'Kızılırmak (1355 km).' },
+    { id:'tcog2', q:'Türkiye kaç iklim bölgesine sahiptir?', a:'Dört farklı iklim tipi vardır.' },
+  ],
+  'tyt-felsefe': [
+    { id:'tfel1', q:'Empirizm nedir?', a:'Bilginin kaynağının deney ve gözlem olduğunu savunan akım.' },
+    { id:'tfel2', q:'Rasyonalizm nedir?', a:'Bilginin kaynağının akıl olduğunu savunan akım.' },
+  ],
+  'tyt-din': [
+    { id:'tdin1', q:'İslam\'ın 5 şartı?', a:'Kelime-i şehadet, namaz, oruç, zekât, hac.' },
+    { id:'tdin2', q:'İnanç esasları kaç tanedir?', a:'6 iman esası.' },
+  ],
+  // AYT Fen
+  'ayt-fizik': [
+    { id:'af1', q:'Faraday İndüksiyon Yasası?', a:'Değişen manyetik akı EMK indükler: EMK = -dΦ/dt.' },
+    { id:'af2', q:'Coulomb Kanunu?', a:'F = k × q₁q₂ / r²' },
+    { id:'af3', q:'İdeal gaz yasası?', a:'PV = nRT' },
+  ],
+  'ayt-kimya': [
+    { id:'ak1', q:'Le Chatelier prensibi?', a:'Dengeye etki edildiğinde denge, etkiyi azaltacak yönde kayar.' },
+    { id:'ak2', q:'pH = ?', a:'pH = -log[H⁺]' },
+    { id:'ak3', q:'Organik kimyada izomer nedir?', a:'Aynı molekül formülüne sahip farklı yapıdaki bileşikler.' },
+  ],
+  'ayt-biyoloji': [
+    { id:'ab1', q:'DNA replikasyonu neden semi-konservatiftir?', a:'Yeni molekülde bir eski bir yeni iplik bulunur.' },
+    { id:'ab2', q:'Mendel\'in ayrılma yasası?', a:'Alleller gametlere ayrılır; her gamette birer alel bulunur.' },
+    { id:'ab3', q:'Enzim aktivitesini etkileyen faktörler?', a:'Sıcaklık, pH, substrat konsantrasyonu, inhibitörler.' },
+  ],
+  // AYT Matematik
+  'ayt-mat-matematik': [
+    { id:'am1', q:'Türev tanımı?', a:'f\'(x) = lim(h→0)[f(x+h)-f(x)]/h' },
+    { id:'am2', q:'∫xⁿ dx = ?', a:'xⁿ⁺¹/(n+1) + C' },
+    { id:'am3', q:'Logaritma: log_a(xy) = ?', a:'log_a(x) + log_a(y)' },
+  ],
+  'ayt-mat-geometri': [
+    { id:'ag1', q:'Çember denklemi?', a:'(x-a)² + (y-b)² = r²' },
+    { id:'ag2', q:'sin²x + cos²x = ?', a:'1' },
+    { id:'ag3', q:'Vektörde nokta çarpım?', a:'a·b = |a||b|cosθ' },
+  ],
+  // AYT Edebiyat-Sosyal 1
+  'ayt-edebiyat': [
+    { id:'ae1', q:'Tanzimat Edebiyatı başlangıç tarihi?', a:'1839 (Tanzimat Fermanı).' },
+    { id:'ae2', q:'Servet-i Fünun önemli isimleri?', a:'Tevfik Fikret, Halit Ziya Uşaklıgil.' },
+    { id:'ae3', q:'Gazel nedir?', a:'5-15 beyitten oluşan, aşk ve şarap temalarını işleyen nazım biçimi.' },
+  ],
+  'ayt-tarih1': [
+    { id:'at1', q:'Lale Devri hangi yıllar arasındadır?', a:'1718-1730.' },
+    { id:'at2', q:'Meşrutiyet kaç kez ilan edildi?', a:'2 kez (1876 ve 1908).' },
+  ],
+  'ayt-cografya1': [
+    { id:'ac1', q:'Akdeniz ikliminin özellikleri?', a:'Yazlar sıcak-kuru, kışlar ılık-yağışlı.' },
+    { id:'ac2', q:'Türkiye\'nin en yüksek dağı?', a:'Ağrı Dağı (5137 m).' },
+  ],
+  // AYT Sosyal 2
+  'ayt-tarih2': [
+    { id:'as1', q:'1. Dünya Savaşı\'nın başlangıç nedeni?', a:'Sarajevo suikastı (1914) ve ittifak sistemi.' },
+    { id:'as2', q:'Soğuk Savaş hangi yıllarda yaşandı?', a:'1947-1991.' },
+  ],
+  'ayt-cografya2': [
+    { id:'aco1', q:'Karadeniz\'in özellikleri?', a:'Yarı kapalı deniz, tuzluluk düşük, Boğazlarla bağlı.' },
+    { id:'aco2', q:'Türkiye\'de nüfus yoğunluğu en fazla bölge?', a:'Marmara Bölgesi.' },
+  ],
+  'ayt-felsefe': [
+    { id:'afel1', q:'Kant\'ın kategorik imperatifi?', a:'"Eyleminin ilkesi evrensel yasa olabilsin." ' },
+    { id:'afel2', q:'Varoluşçuluk kurucusu?', a:'Jean-Paul Sartre (ve Kierkegaard öncüsü).' },
+  ],
+  'ayt-psikoloji': [
+    { id:'apsi1', q:'Klasik koşullanma nedir?', a:'Pavlov: koşulsuz uyarıcıyla eşleşen koşullu uyarıcı aynı tepkiyi doğurur.' },
+    { id:'apsi2', q:'Savunma mekanizmaları nedir?', a:'Bireyin kaygıya karşı bilinçdışı tepkileri (yansıtma, inkâr, bastırma).' },
+  ],
+  'ayt-sosyoloji': [
+    { id:'asos1', q:'Sosyal tabakalaşma nedir?', a:'Toplumun gelir, statü ve güce göre hiyerarşik katmanlara ayrılması.' },
+    { id:'asos2', q:'Sosyalizasyon nedir?', a:'Bireyin toplumun değer ve normlarını içselleştirme süreci.' },
+  ],
+  'ayt-mantik': [
+    { id:'aman1', q:'Tümevarım nedir?', a:'Özelden genele ulaşan çıkarım.' },
+    { id:'aman2', q:'Tümdengelim nedir?', a:'Genelden özele ulaşan çıkarım.' },
+  ],
+  'ayt-din': [
+    { id:'adin1', q:'Dört büyük halife sırası?', a:'Hz. Ebubekir, Hz. Ömer, Hz. Osman, Hz. Ali.' },
+    { id:'adin2', q:'Hicret nedir ve tarihi?', a:'Hz. Muhammed\'in Mekke\'den Medine\'ye göçü (622).' },
   ],
 }
 
 // ── Karıştırılmış desteler ────────────────────────────────────
-export const MIX_TYT  = TYT_BOLUMLER.flatMap(d => (DECK_CARDS[d.slug] || []))
-export const MIX_AYT  = AYT_BOLUMLER.flatMap(d => (DECK_CARDS[d.slug] || []))
+export const MIX_TYT  = TYT_BOLUMLER.flatMap(b => b.dersler.flatMap(d => DECK_CARDS[d.slug] || []))
+export const MIX_AYT  = AYT_BOLUMLER.flatMap(b => b.dersler.flatMap(d => DECK_CARDS[d.slug] || []))
 export const MIX_ALL  = [...MIX_TYT, ...MIX_AYT]
 
 // ── SM-2 SRS Algoritması ─────────────────────────────────────

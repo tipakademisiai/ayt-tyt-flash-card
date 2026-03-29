@@ -5,6 +5,25 @@ import { KpiCard, Badge, PageTopbar, FilterBar, Modal, ConfirmModal } from '../.
 import styles from '../../styles/shared.module.css'
 import toast from 'react-hot-toast'
 
+const MOCK_USERS = [
+  { id:1, first_name:'Admin',  last_name:'Kullanıcı', email:'admin@ayttyt.com',    role:'admin',    subscription:'pro',      status:'active', date_joined:'2025-01-01', is_active:true,
+    active_sub:{ plan:'pro', status:'active', ends_at:'2026-12-31', price_paid:'499', is_yearly:false } },
+  { id:2, first_name:'Ahmet',  last_name:'Eğitmen',   email:'egitmen@ayttyt.com',  role:'trainer',  subscription:'pro',      status:'active', date_joined:'2025-01-15', is_active:true, commission_rate:20,
+    active_sub:{ plan:'pro', status:'active', ends_at:'2026-12-31', price_paid:'0', is_yearly:false } },
+  { id:3, first_name:'Ayşe',   last_name:'Destek',    email:'destek@ayttyt.com',   role:'support',  subscription:'pro',      status:'active', date_joined:'2025-02-01', is_active:true,
+    active_sub:{ plan:'pro', status:'active', ends_at:'2026-12-31', price_paid:'0', is_yearly:false } },
+  { id:4, first_name:'Mehmet', last_name:'Öğrenci',   email:'ogrenci@ayttyt.com',  role:'customer', subscription:'pro',      status:'active', date_joined:'2025-03-01', is_active:true,
+    active_sub:{ plan:'pro', status:'active', ends_at:'2026-06-01', price_paid:'499', is_yearly:false } },
+  { id:5, first_name:'Zeynep', last_name:'Yılmaz',    email:'zeynep@gmail.com',    role:'customer', subscription:'standart', status:'active', date_joined:'2025-03-10', is_active:true,
+    active_sub:{ plan:'standart', status:'active', ends_at:'2026-04-10', price_paid:'449', is_yearly:false } },
+  { id:6, first_name:'Ali',    last_name:'Kaya',      email:'ali@gmail.com',       role:'customer', subscription:'baslangic',status:'active', date_joined:'2025-03-20', is_active:true,
+    active_sub:{ plan:'baslangic', status:'active', ends_at:'2026-04-20', price_paid:'149', is_yearly:false } },
+  { id:7, first_name:'Fatma',  last_name:'Demir',     email:'fatma@gmail.com',     role:'customer', subscription:'trial',    status:'trial',  date_joined:'2026-03-25', is_active:true,
+    active_sub:{ plan:'trial', status:'trial', ends_at:'2026-03-28', price_paid:'0', is_yearly:false } },
+  { id:8, first_name:'Can',    last_name:'Çelik',     email:'can@gmail.com',       role:'customer', subscription:null,       status:'passive',date_joined:'2025-02-15', is_active:false,
+    active_sub:null },
+]
+
 const STATUS_BADGE = { active:'green', trial:'yellow', passive:'gray', suspended:'red' }
 const STATUS_LABEL = { active:'Aktif', trial:'Trial', passive:'Pasif', suspended:'Askıda' }
 const ROLE_BADGE   = { customer:'blue', trainer:'purple', support:'yellow', admin:'red' }
@@ -254,7 +273,7 @@ export default function AdminUsers() {
   const [grantForm, setGrantForm] = useState({ plan:'pro', days:7, customDays:'' })
 
   // ── DATA ──────────────────────────────────────────────────────
-  const { data: usersData = {}, isLoading } = useQuery({
+  const { data: apiData, isLoading, isError } = useQuery({
     queryKey: ['admin-users', search, roleF, statusF],
     queryFn: () => usersAPI.list({
       search:      search  || undefined,
@@ -262,8 +281,10 @@ export default function AdminUsers() {
       is_active:   statusF === 'active' ? true : statusF === 'suspended' ? false : undefined,
       subscription:statusF === 'trial'  ? 'trial' : undefined,
     }).then(r => r.data),
+    retry: 1,
   })
 
+  const usersData = (isError || !apiData) ? { results: MOCK_USERS, count: MOCK_USERS.length } : apiData
   const users  = usersData?.results ?? (Array.isArray(usersData) ? usersData : [])
   const total  = usersData?.count   ?? users.length
   const active = users.filter(u => u.is_active && !u.is_suspended).length

@@ -3,74 +3,10 @@ import { ThemeToggle } from '../../components/shared'
 import { TYT_BOLUMLER, AYT_BOLUMLER, DECK_CARDS, MIX_ALL, MIX_TYT, MIX_AYT, SRS_COLORS } from '../../data'
 import { COURSE_ICON_MAP } from '../../data/courseIcons'
 
-// ── Kurs seçim kartı ──────────────────────────────────────────
-function CourseCard({ deck, type, onSelect }) {
-  const Icon = COURSE_ICON_MAP[deck.slug]
-  const accentColor = type === 'tyt' ? '#4A90D0' : '#D0506A'
-  const fillColor   = type === 'tyt'
-    ? 'linear-gradient(90deg,#4A90D0,#00AADD)'
-    : 'linear-gradient(90deg,#C04060,#FF7090)'
-
-  return (
-    <div
-      onClick={onSelect}
-      style={{
-        borderRadius: 18, padding: '18px 14px 14px', cursor: 'pointer',
-        transition: 'transform .18s, box-shadow .18s',
-        background: 'var(--card)', border: '1px solid var(--border)',
-        textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center',
-      }}
-      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,.12)' }}
-      onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '' }}>
-      <div style={{ marginBottom: 10 }}>
-        {Icon ? <Icon color={accentColor} size={46} /> : <span style={{ fontSize: 32 }}>📚</span>}
-      </div>
-      <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--t1)', marginBottom: 3, lineHeight: 1.3,
-        overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', minHeight: 30 }}>
-        {deck.name}
-      </div>
-      <div style={{ fontSize: 10, color: 'var(--t3)', marginBottom: 10 }}>{deck.cards} kart</div>
-      <div style={{ display: 'flex', gap: 4, justifyContent: 'center', marginBottom: 8, minHeight: 10 }}>
-        {deck.srs.filter(l => l > 0).map((l, i) => (
-          <div key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: SRS_COLORS[l - 1] }}/>
-        ))}
-      </div>
-      <div style={{ width: '100%', height: 3, background: 'var(--border)', borderRadius: 99, overflow: 'hidden', marginBottom: 5 }}>
-        <div style={{ width: `${deck.done}%`, height: '100%', borderRadius: 99, background: fillColor }}/>
-      </div>
-      <div style={{ fontSize: 9, color: 'var(--t3)', fontWeight: 600 }}>%{deck.done} · {deck.pending} bekliyor</div>
-    </div>
-  )
-}
-
-// ── MIX kartı ────────────────────────────────────────────────
-function MixCard({ icon, label, sub, gradient, border, count, onSelect }) {
-  return (
-    <div onClick={onSelect}
-      style={{ borderRadius: 16, padding: '16px 14px', cursor: 'pointer',
-        background: gradient, border: `1px solid ${border}`,
-        transition: 'transform .18s, box-shadow .18s', marginBottom: 10 }}
-      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,.15)' }}
-      onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ fontSize: 26, flexShrink: 0 }}>{icon}</div>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 13, fontWeight: 800, color: 'white' }}>{label}</div>
-          <div style={{ fontSize: 10, color: 'rgba(255,255,255,.6)', marginTop: 2 }}>{sub}</div>
-        </div>
-        <div style={{ textAlign: 'right' }}>
-          <div style={{ fontSize: 14, fontWeight: 800, color: 'white' }}>{count}</div>
-          <div style={{ fontSize: 9, color: 'rgba(255,255,255,.5)' }}>kart</div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 // ── Flash kart çalışma görünümü ───────────────────────────────
 function StudyView({ cards, deckName, onFinish }) {
-  const [idx, setIdx]       = useState(0)
-  const [flipped, setFlip]  = useState(false)
+  const [idx, setIdx]         = useState(0)
+  const [flipped, setFlip]    = useState(false)
   const [correct, setCorrect] = useState(0)
   const [wrong, setWrong]     = useState(0)
   const [confSum, setConfSum] = useState(0)
@@ -236,31 +172,71 @@ function ResultView({ result, deckName, onRestart, onBack }) {
   )
 }
 
+// ── Geri butonu ───────────────────────────────────────────────
+function BackBtn({ onClick, label = 'Geri' }) {
+  return (
+    <button onClick={onClick} style={{
+      display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none',
+      cursor: 'pointer', color: 'var(--t3)', fontSize: 12, fontWeight: 700, padding: '0 0 14px 0'
+    }}>
+      <span>←</span> {label}
+    </button>
+  )
+}
+
+// ── MIX kartı ────────────────────────────────────────────────
+function MixCard({ icon, label, sub, gradient, border, count, onSelect, compact }) {
+  return (
+    <div onClick={onSelect}
+      style={{ borderRadius: 16, padding: compact ? '12px 12px' : '16px 14px', cursor: 'pointer',
+        background: gradient, border: `1px solid ${border}`,
+        transition: 'transform .18s, box-shadow .18s',
+        marginBottom: compact ? 0 : 10,
+        display: 'flex', alignItems: 'center', gap: compact ? 8 : 12 }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,.15)' }}
+      onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '' }}>
+      <div style={{ fontSize: compact ? 20 : 26, flexShrink: 0 }}>{icon}</div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: compact ? 11 : 13, fontWeight: 800, color: 'white',
+          overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{label}</div>
+        <div style={{ fontSize: 9, color: 'rgba(255,255,255,.6)', marginTop: 2 }}>{sub}</div>
+      </div>
+      <div style={{ textAlign: 'right', flexShrink: 0 }}>
+        <div style={{ fontSize: compact ? 12 : 14, fontWeight: 800, color: 'white' }}>{count}</div>
+        <div style={{ fontSize: 9, color: 'rgba(255,255,255,.5)' }}>kart</div>
+      </div>
+    </div>
+  )
+}
+
 // ── ANA BİLEŞEN ───────────────────────────────────────────────
 export default function CustomerDecks() {
-  const [phase, setPhase]       = useState('select')
-  const [activeCards, setActiveCards] = useState([])
-  const [deckName, setDeckName] = useState('')
-  const [result, setResult]     = useState(null)
+  const [phase, setPhase]               = useState('select')
+  const [selectedKategori, setSelectedKategori] = useState(null) // 'tyt' | 'ayt'
+  const [selectedBolum, setSelectedBolum]       = useState(null)
+  const [activeCards, setActiveCards]           = useState([])
+  const [deckName, setDeckName]                 = useState('')
+  const [result, setResult]                     = useState(null)
 
-  const startDeck = (cards, name) => {
-    // Kartları karıştır
+  const startDeck = useCallback((cards, name) => {
     const shuffled = [...cards].sort(() => Math.random() - 0.5)
     setActiveCards(shuffled)
     setDeckName(name)
     setResult(null)
     setPhase('study')
-  }
+  }, [])
 
-  const handleFinish = (res) => {
+  const handleFinish = useCallback((res) => {
     setResult(res)
     setPhase('result')
-  }
+  }, [])
 
+  // ── ÇALIŞMA EKRANI ────────────────────────────────────────────
   if (phase === 'study') {
     return <StudyView cards={activeCards} deckName={deckName} onFinish={handleFinish} />
   }
 
+  // ── SONUÇ EKRANI ──────────────────────────────────────────────
   if (phase === 'result') {
     return (
       <ResultView
@@ -272,7 +248,112 @@ export default function CustomerDecks() {
     )
   }
 
-  // ── SEÇIM EKRANI ─────────────────────────────────────────────
+  // ── DERS LİSTESİ (3. katman) ──────────────────────────────────
+  if (phase === 'ders' && selectedBolum) {
+    const color = selectedKategori === 'tyt' ? '#4A90D0' : '#D0506A'
+    return (
+      <div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 4 }}>
+          <div style={{ fontSize: 19, fontWeight: 900, color: 'var(--t1)' }}>{selectedBolum.name}</div>
+          <ThemeToggle />
+        </div>
+        <BackBtn
+          onClick={() => setPhase('bolum')}
+          label={selectedKategori === 'tyt' ? 'TYT Bölümleri' : 'AYT Bölümleri'}
+        />
+
+        {/* Tüm bölümü karıştır */}
+        <div
+          onClick={() => startDeck(
+            selectedBolum.dersler.flatMap(d => DECK_CARDS[d.slug] || []),
+            `${selectedBolum.name} — Tümünü Karıştır`
+          )}
+          style={{ borderRadius: 14, padding: '14px 16px', marginBottom: 16, cursor: 'pointer',
+            background: selectedKategori === 'tyt'
+              ? 'linear-gradient(145deg,rgba(74,144,208,.45),rgba(0,170,221,.25))'
+              : 'linear-gradient(145deg,rgba(192,64,96,.45),rgba(255,112,144,.2))',
+            border: `1px solid ${color}44`,
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            transition: 'transform .15s, box-shadow .15s' }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,.12)' }}
+          onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '' }}>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 800, color: 'white' }}>🔀 Tüm {selectedBolum.name}</div>
+            <div style={{ fontSize: 10, color: 'rgba(255,255,255,.6)', marginTop: 2 }}>
+              {selectedBolum.dersler.length} ders — {selectedBolum.cards} kart
+            </div>
+          </div>
+          <div style={{ fontSize: 14, fontWeight: 800, color: 'white' }}>→</div>
+        </div>
+
+        {/* Ders listesi */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {selectedBolum.dersler.map(ders => (
+            <div key={ders.slug}
+              onClick={() => startDeck(DECK_CARDS[ders.slug] || [], ders.name)}
+              style={{ borderRadius: 12, padding: '14px 16px', cursor: 'pointer',
+                background: 'var(--card)', border: '1px solid var(--border)',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                transition: 'all .15s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = color; e.currentTarget.style.background = `${color}11` }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--card)' }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--t1)' }}>{ders.name}</div>
+                <div style={{ fontSize: 10, color: 'var(--t3)', marginTop: 2 }}>{ders.cards} kart</div>
+              </div>
+              <div style={{ fontSize: 18, color: color }}>›</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  // ── BÖLÜM LİSTESİ (2. katman) ─────────────────────────────────
+  if (phase === 'bolum' && selectedKategori) {
+    const bolumler = selectedKategori === 'tyt' ? TYT_BOLUMLER : AYT_BOLUMLER
+    const color    = selectedKategori === 'tyt' ? '#4A90D0' : '#D0506A'
+    const label    = selectedKategori === 'tyt' ? 'TYT' : 'AYT'
+    return (
+      <div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 4 }}>
+          <div style={{ fontSize: 19, fontWeight: 900, color: 'var(--t1)' }}>{label} Bölümleri</div>
+          <ThemeToggle />
+        </div>
+        <BackBtn onClick={() => setPhase('select')} label="Kategoriler" />
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {bolumler.map(bolum => {
+            const Icon = COURSE_ICON_MAP[bolum.slug]
+            return (
+              <div key={bolum.id}
+                onClick={() => { setSelectedBolum(bolum); setPhase('ders') }}
+                style={{ borderRadius: 16, padding: '16px', cursor: 'pointer',
+                  background: 'var(--card)', border: '1px solid var(--border)',
+                  display: 'flex', alignItems: 'center', gap: 14,
+                  transition: 'all .15s' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = color; e.currentTarget.style.transform = 'translateX(3px)' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = '' }}>
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: `${color}20`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  {Icon ? <Icon color={color} size={24} /> : <span style={{ fontSize: 22 }}>📚</span>}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--t1)' }}>{bolum.name}</div>
+                  <div style={{ fontSize: 10, color: 'var(--t3)', marginTop: 2 }}>
+                    {bolum.dersler.length} ders · {bolum.cards} kart
+                  </div>
+                </div>
+                <div style={{ fontSize: 18, color: 'var(--t3)' }}>›</div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
+  // ── KATEGORİ SEÇIM EKRANI (1. katman) ─────────────────────────
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 18 }}>
@@ -280,61 +361,83 @@ export default function CustomerDecks() {
         <ThemeToggle />
       </div>
 
-      {/* Legend */}
-      <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginBottom: 16, flexWrap: 'wrap' }}>
-        {[{c:'#E05070',l:'Kritik'},{c:'#F5A020',l:'Orta'},{c:'#10B981',l:'İyi'},{c:'#4A90D0',l:'Uzman'}].map(s => (
-          <div key={s.l} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 9, fontWeight: 600, color: 'var(--t3)' }}>
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: s.c }}/>{s.l}
-          </div>
-        ))}
+      {/* Karıştır başlığı */}
+      <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--t3)', letterSpacing: '.08em',
+        textTransform: 'uppercase', marginBottom: 10,
+        display: 'flex', alignItems: 'center', gap: 10 }}>
+        <span>Karıştır</span>
+        <div style={{ flex: 1, height: 1, background: 'var(--border)' }}/>
       </div>
 
-      {/* Karıştır seçenekleri */}
+      {/* Hepsini Karıştır */}
       <MixCard icon="🔀" label="Hepsini Karıştır"
-        sub="8 bölüm — tüm müfredat"
+        sub="TYT + AYT — tüm müfredat"
         gradient="linear-gradient(145deg,rgba(0,80,140,.65),rgba(0,140,200,.45))"
         border="rgba(0,170,221,.35)"
         count={MIX_ALL.length}
         onSelect={() => startDeck(MIX_ALL, 'Hepsini Karıştır')} />
-      <MixCard icon="📚" label="TYT Bölümlerini Karıştır"
-        sub="Türkçe, Matematik, Fen..."
-        gradient="linear-gradient(145deg,rgba(74,144,208,.55),rgba(0,170,221,.35))"
-        border="rgba(74,144,208,.4)"
-        count={MIX_TYT.length}
-        onSelect={() => startDeck(MIX_TYT, 'TYT Bölümlerini Karıştır')} />
-      <MixCard icon="🎓" label="AYT Bölümlerini Karıştır"
-        sub="Fen, Matematik, Edebiyat..."
-        gradient="linear-gradient(145deg,rgba(192,64,96,.55),rgba(255,112,144,.3))"
-        border="rgba(208,80,106,.4)"
-        count={MIX_AYT.length}
-        onSelect={() => startDeck(MIX_AYT, 'AYT Bölümlerini Karıştır')} />
 
-      {/* TYT Bölümleri */}
-      <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(74,144,208,.9)', letterSpacing: '.08em',
-        textTransform: 'uppercase', marginBottom: 12, marginTop: 4,
-        display: 'flex', alignItems: 'center', gap: 10 }}>
-        <span>TYT</span>
-        <div style={{ flex: 1, height: 1, background: 'rgba(74,144,208,.2)' }}/>
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
-        {TYT_BOLUMLER.map(d => (
-          <CourseCard key={d.id} deck={d} type="tyt"
-            onSelect={() => startDeck(DECK_CARDS[d.slug] || [], d.name)} />
-        ))}
+      {/* TYT + AYT Karıştır (2'li grid) */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
+        <MixCard icon="📚" label="TYT Karıştır"
+          sub="4 bölüm"
+          gradient="linear-gradient(145deg,rgba(74,144,208,.55),rgba(0,170,221,.35))"
+          border="rgba(74,144,208,.4)"
+          count={MIX_TYT.length}
+          compact
+          onSelect={() => startDeck(MIX_TYT, 'TYT Karıştır')} />
+        <MixCard icon="🎓" label="AYT Karıştır"
+          sub="4 bölüm"
+          gradient="linear-gradient(145deg,rgba(192,64,96,.55),rgba(255,112,144,.3))"
+          border="rgba(208,80,106,.4)"
+          count={MIX_AYT.length}
+          compact
+          onSelect={() => startDeck(MIX_AYT, 'AYT Karıştır')} />
       </div>
 
-      {/* AYT Bölümleri */}
-      <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(208,80,106,.9)', letterSpacing: '.08em',
-        textTransform: 'uppercase', marginBottom: 12,
+      {/* Kategoriler başlığı */}
+      <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--t3)', letterSpacing: '.08em',
+        textTransform: 'uppercase', marginBottom: 10,
         display: 'flex', alignItems: 'center', gap: 10 }}>
-        <span>AYT</span>
-        <div style={{ flex: 1, height: 1, background: 'rgba(208,80,106,.2)' }}/>
+        <span>Kategoriler</span>
+        <div style={{ flex: 1, height: 1, background: 'var(--border)' }}/>
       </div>
+
+      {/* TYT / AYT kategori kartları */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-        {AYT_BOLUMLER.map(d => (
-          <CourseCard key={d.id} deck={d} type="ayt"
-            onSelect={() => startDeck(DECK_CARDS[d.slug] || [], d.name)} />
-        ))}
+        {/* TYT */}
+        <div
+          onClick={() => { setSelectedKategori('tyt'); setPhase('bolum') }}
+          style={{ borderRadius: 18, padding: '20px 14px', cursor: 'pointer',
+            background: 'linear-gradient(145deg,rgba(74,144,208,.35),rgba(0,170,221,.2))',
+            border: '1px solid rgba(74,144,208,.4)', textAlign: 'center',
+            transition: 'all .18s' }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(74,144,208,.2)' }}
+          onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '' }}>
+          <div style={{ fontSize: 32, marginBottom: 8 }}>📘</div>
+          <div style={{ fontSize: 18, fontWeight: 900, color: '#4A90D0', marginBottom: 4 }}>TYT</div>
+          <div style={{ fontSize: 10, color: 'rgba(74,144,208,.8)', marginBottom: 8 }}>Temel Yeterlilik</div>
+          <div style={{ fontSize: 10, color: 'var(--t3)' }}>
+            4 bölüm · {TYT_BOLUMLER.reduce((s, b) => s + b.cards, 0)} kart
+          </div>
+        </div>
+
+        {/* AYT */}
+        <div
+          onClick={() => { setSelectedKategori('ayt'); setPhase('bolum') }}
+          style={{ borderRadius: 18, padding: '20px 14px', cursor: 'pointer',
+            background: 'linear-gradient(145deg,rgba(192,64,96,.35),rgba(255,112,144,.2))',
+            border: '1px solid rgba(208,80,106,.4)', textAlign: 'center',
+            transition: 'all .18s' }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(208,80,106,.2)' }}
+          onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '' }}>
+          <div style={{ fontSize: 32, marginBottom: 8 }}>🎓</div>
+          <div style={{ fontSize: 18, fontWeight: 900, color: '#D0506A', marginBottom: 4 }}>AYT</div>
+          <div style={{ fontSize: 10, color: 'rgba(208,80,106,.8)', marginBottom: 8 }}>Alan Yeterlilik</div>
+          <div style={{ fontSize: 10, color: 'var(--t3)' }}>
+            4 bölüm · {AYT_BOLUMLER.reduce((s, b) => s + b.cards, 0)} kart
+          </div>
+        </div>
       </div>
     </div>
   )
