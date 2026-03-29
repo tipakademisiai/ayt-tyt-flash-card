@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import { ThemeToggle } from '../../components/shared'
 import { TYT_BOLUMLER, AYT_BOLUMLER, DECK_CARDS, MIX_ALL, MIX_TYT, MIX_AYT, SRS_COLORS } from '../../data'
 import { COURSE_ICON_MAP } from '../../data/courseIcons'
+import toast from 'react-hot-toast'
 
 // ── Flash kart çalışma görünümü ───────────────────────────────
 function StudyView({ cards, deckName, onFinish }) {
@@ -219,6 +220,10 @@ export default function CustomerDecks() {
   const [result, setResult]                     = useState(null)
 
   const startDeck = useCallback((cards, name) => {
+    if (!cards || cards.length === 0) {
+      toast('Bu ders için henüz kart eklenmemiş.', { icon: '📭' })
+      return
+    }
     const shuffled = [...cards].sort(() => Math.random() - 0.5)
     setActiveCards(shuffled)
     setDeckName(name)

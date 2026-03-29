@@ -5,6 +5,35 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import styles from '../../styles/shared.module.css'
 import toast from 'react-hot-toast'
 
+// ── MOCK VERİ (backend olmadan) ───────────────────────────────
+const MOCK_COURSES = [
+  { id:1, name:'Türkçe (TYT)',            branch_type:'tyt', chapters:[{id:1,name:'Paragraf'},{id:2,name:'Dil Bilgisi'},{id:3,name:'Anlam Bilgisi'}] },
+  { id:2, name:'Matematik (TYT)',          branch_type:'tyt', chapters:[{id:4,name:'Temel Matematik'},{id:5,name:'Problemler'},{id:6,name:'Geometri'}] },
+  { id:3, name:'Fen Bilimleri (TYT)',      branch_type:'tyt', chapters:[{id:7,name:'Fizik'},{id:8,name:'Kimya'},{id:9,name:'Biyoloji'}] },
+  { id:4, name:'Sosyal Bilimler (TYT)',    branch_type:'tyt', chapters:[{id:10,name:'Tarih'},{id:11,name:'Coğrafya'},{id:12,name:'Felsefe'},{id:13,name:'Din Kültürü'}] },
+  { id:5, name:'Fen Bilimleri (AYT)',      branch_type:'ayt', chapters:[{id:14,name:'Fizik'},{id:15,name:'Kimya'},{id:16,name:'Biyoloji'}] },
+  { id:6, name:'Matematik (AYT)',          branch_type:'ayt', chapters:[{id:17,name:'Matematik'},{id:18,name:'Geometri'}] },
+  { id:7, name:'Edebiyat – Sosyal Bil. 1', branch_type:'ayt', chapters:[{id:19,name:'Türk Dili ve Edebiyatı'},{id:20,name:'Tarih-1'},{id:21,name:'Coğrafya-1'}] },
+  { id:8, name:'Sosyal Bilimler 2 (AYT)',  branch_type:'ayt', chapters:[{id:22,name:'Tarih-2'},{id:23,name:'Coğrafya-2'},{id:24,name:'Felsefe'},{id:25,name:'Psikoloji'},{id:26,name:'Sosyoloji'},{id:27,name:'Mantık'},{id:28,name:'Din Kültürü'}] },
+]
+const MOCK_CARDS = [
+  { id:1,  question:'Paragrafta ana fikir nerede bulunur?',          answer:'Genellikle başta veya sonda; bazen tümüne yayılır.',                  card_type:'qa',  status:'published', course:1, chapter:1, created_at:'2026-01-01' },
+  { id:2,  question:'Fiilimsi türleri nelerdir?',                     answer:'İsim-fiil, sıfat-fiil, zarf-fiil.',                                   card_type:'qa',  status:'published', course:1, chapter:2, created_at:'2026-01-02' },
+  { id:3,  question:'Mecaz anlam nedir?',                             answer:'Sözcüğün gerçek anlamı dışında kullanılmasıdır.',                     card_type:'def', status:'published', course:1, chapter:3, created_at:'2026-01-03' },
+  { id:4,  question:'Kareler farkı formülü?',                         answer:'a² - b² = (a+b)(a-b)',                                               card_type:'qa',  status:'published', course:2, chapter:4, created_at:'2026-01-04' },
+  { id:5,  question:'Hız-Zaman-Mesafe formülü?',                      answer:'M = H × Z',                                                          card_type:'qa',  status:'published', course:2, chapter:5, created_at:'2026-01-05' },
+  { id:6,  question:'Üçgende iç açılar toplamı?',                     answer:'180°',                                                               card_type:'qa',  status:'published', course:2, chapter:6, created_at:'2026-01-06' },
+  { id:7,  question:"Newton'un 1. Yasası?",                           answer:'Net kuvvet sıfırsa cisim durur ya da sabit hızla hareket eder.',      card_type:'qa',  status:'published', course:3, chapter:7, created_at:'2026-01-07' },
+  { id:8,  question:'Atom numarası neyi gösterir?',                   answer:'Proton sayısını.',                                                    card_type:'def', status:'published', course:3, chapter:8, created_at:'2026-01-08' },
+  { id:9,  question:'Fotosentez denklemi?',                           answer:'6CO₂ + 6H₂O + ışık → C₆H₁₂O₆ + 6O₂',                              card_type:'qa',  status:'published', course:3, chapter:9, created_at:'2026-01-09' },
+  { id:10, question:"Osmanlı'nın kuruluş yılı?",                      answer:'1299.',                                                              card_type:'qa',  status:'pending',   course:4, chapter:10,created_at:'2026-01-10' },
+  { id:11, question:"Türkiye'nin en uzun nehri?",                     answer:'Kızılırmak (1355 km).',                                              card_type:'qa',  status:'pending',   course:4, chapter:11,created_at:'2026-01-11' },
+  { id:12, question:'Empirizm nedir?',                                answer:'Bilginin kaynağının deney ve gözlem olduğunu savunan akım.',         card_type:'def', status:'draft',     course:4, chapter:12,created_at:'2026-01-12' },
+  { id:13, question:'Faraday İndüksiyon Yasası?',                     answer:'Değişen manyetik akı EMK indükler: EMK = -dΦ/dt.',                   card_type:'qa',  status:'published', course:5, chapter:14,created_at:'2026-01-13' },
+  { id:14, question:'Türev tanımı?',                                  answer:"f'(x) = lim(h→0)[f(x+h)-f(x)]/h",                                   card_type:'def', status:'published', course:6, chapter:17,created_at:'2026-01-14' },
+  { id:15, question:'Tanzimat Edebiyatı başlangıç tarihi?',           answer:'1839 (Tanzimat Fermanı).',                                           card_type:'qa',  status:'published', course:7, chapter:19,created_at:'2026-01-15' },
+]
+
 const STATUS_BADGE = { published:'green', pending:'yellow', draft:'gray', rejected:'red' }
 const STATUS_LABEL = { published:'Yayında', pending:'Onay Bekliyor', draft:'Taslak', rejected:'Reddedildi' }
 
@@ -22,18 +51,30 @@ export default function AdminContent() {
   const [form,        setForm]        = useState(EMPTY_FORM)
 
   // ── DATA ──────────────────────────────────────────────────────
-  const { data: cards = [], isLoading } = useQuery({
+  const { data: rawCards, isLoading, isError: cardsErr } = useQuery({
     queryKey: ['admin-cards', search, filterType, filterStat],
     queryFn: () => cardsAPI.list({
       search:    search    || undefined,
       card_type: filterType || undefined,
       status:    filterStat || undefined,
     }).then(r => r.data?.results ?? r.data),
+    retry: 1,
   })
-
-  const { data: courses = [] } = useQuery({
+  const { data: rawCourses, isError: coursesErr } = useQuery({
     queryKey: ['courses'],
     queryFn: () => coursesAPI.list().then(r => r.data?.results ?? r.data),
+    retry: 1,
+  })
+
+  const allCards = (cardsErr  || !rawCards)   ? MOCK_CARDS   : rawCards
+  const courses  = (coursesErr || !rawCourses) ? MOCK_COURSES : rawCourses
+
+  // Arama + filtre (mock ve gerçek veri için)
+  const cards = allCards.filter(c => {
+    if (search     && !c.question?.toLowerCase().includes(search.toLowerCase())) return false
+    if (filterType && c.card_type !== filterType) return false
+    if (filterStat && c.status    !== filterStat) return false
+    return true
   })
 
   const selectedCourse = courses.find(c => String(c.id) === String(form.course))
