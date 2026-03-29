@@ -3,12 +3,42 @@ import { authAPI } from '../api/client'
 
 const AuthContext = createContext(null)
 
+// ── DEMO KULLANICILAR (backend olmadan çalışır) ───────────────
+const DEMO_USERS = {
+  'admin@ayttyt.com': {
+    email: 'admin@ayttyt.com', password: 'admin123',
+    first_name: 'Admin', last_name: 'Kullanıcı',
+    role: 'admin', subscription: 'pro',
+  },
+  'egitmen@ayttyt.com': {
+    email: 'egitmen@ayttyt.com', password: 'egitmen123',
+    first_name: 'Ahmet', last_name: 'Eğitmen',
+    role: 'trainer', subscription: 'pro',
+  },
+  'destek@ayttyt.com': {
+    email: 'destek@ayttyt.com', password: 'destek123',
+    first_name: 'Ayşe', last_name: 'Destek',
+    role: 'support', subscription: 'pro',
+  },
+  'ogrenci@ayttyt.com': {
+    email: 'ogrenci@ayttyt.com', password: 'ogrenci123',
+    first_name: 'Mehmet', last_name: 'Öğrenci',
+    role: 'customer', subscription: 'pro',
+  },
+}
+
 export function AuthProvider({ children }) {
   const [user,    setUser]    = useState(null)
   const [loading, setLoading] = useState(true)
 
   // Sayfa yüklenince mevcut kullanıcıyı kontrol et
   useEffect(() => {
+    const saved = localStorage.getItem('demo_user')
+    if (saved) {
+      setUser(JSON.parse(saved))
+      setLoading(false)
+      return
+    }
     const token = localStorage.getItem('access_token')
     if (token) {
       authAPI.me()
@@ -24,6 +54,14 @@ export function AuthProvider({ children }) {
   }, [])
 
   const login = useCallback(async (email, password) => {
+    // Demo kullanıcı kontrolü
+    const demo = DEMO_USERS[email]
+    if (demo && demo.password === password) {
+      localStorage.setItem('demo_user', JSON.stringify(demo))
+      setUser(demo)
+      return demo
+    }
+    // Gerçek API
     const { data } = await authAPI.login({ email, password })
     localStorage.setItem('access_token',  data.access)
     localStorage.setItem('refresh_token', data.refresh)
@@ -40,6 +78,7 @@ export function AuthProvider({ children }) {
   }, [])
 
   const logout = useCallback(async () => {
+    localStorage.removeItem('demo_user')
     try {
       await authAPI.logout({ refresh: localStorage.getItem('refresh_token') })
     } catch {}

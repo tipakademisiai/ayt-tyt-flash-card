@@ -195,18 +195,22 @@ export const DECK_CARDS = {
   'tyt-tarih': [
     { id:'ttar1', q:'Osmanlı\'nın kuruluş yılı?', a:'1299.' },
     { id:'ttar2', q:'Kurtuluş Savaşı hangi antlaşmayla bitti?', a:'Lozan Antlaşması (1923).' },
+    { id:'ttar3', q:'İstanbul\'un fethi hangi yılda, kim tarafından gerçekleştirildi?', a:'1453 yılında Fatih Sultan Mehmet tarafından.' },
   ],
   'tyt-cografya': [
     { id:'tcog1', q:'Türkiye\'nin en uzun nehri?', a:'Kızılırmak (1355 km).' },
     { id:'tcog2', q:'Türkiye kaç iklim bölgesine sahiptir?', a:'Dört farklı iklim tipi vardır.' },
+    { id:'tcog3', q:'Türkiye\'nin en büyük gölü hangisidir?', a:'Van Gölü (3713 km²).' },
   ],
   'tyt-felsefe': [
     { id:'tfel1', q:'Empirizm nedir?', a:'Bilginin kaynağının deney ve gözlem olduğunu savunan akım.' },
     { id:'tfel2', q:'Rasyonalizm nedir?', a:'Bilginin kaynağının akıl olduğunu savunan akım.' },
+    { id:'tfel3', q:'Sokrates\'in "bilgelik" anlayışı nedir?', a:'"Tek bildiğim, hiçbir şey bilmediğimdir." — Bilgelik cahilliğin farkında olmaktır.' },
   ],
   'tyt-din': [
     { id:'tdin1', q:'İslam\'ın 5 şartı?', a:'Kelime-i şehadet, namaz, oruç, zekât, hac.' },
     { id:'tdin2', q:'İnanç esasları kaç tanedir?', a:'6 iman esası.' },
+    { id:'tdin3', q:'Hristiyan inancında Kutsal Kitap\'ın bölümleri?', a:'Eski Ahit (Tevrat) ve Yeni Ahit (İncil) olmak üzere iki bölümden oluşur.' },
   ],
   // AYT Fen
   'ayt-fizik': [
@@ -244,39 +248,48 @@ export const DECK_CARDS = {
   'ayt-tarih1': [
     { id:'at1', q:'Lale Devri hangi yıllar arasındadır?', a:'1718-1730.' },
     { id:'at2', q:'Meşrutiyet kaç kez ilan edildi?', a:'2 kez (1876 ve 1908).' },
+    { id:'at3', q:'Osmanlı\'da Tanzimat Fermanı hangi padişah döneminde, kaçıncı yılda ilan edildi?', a:'Sultan Abdülmecit döneminde, 1839\'da ilan edildi.' },
   ],
   'ayt-cografya1': [
     { id:'ac1', q:'Akdeniz ikliminin özellikleri?', a:'Yazlar sıcak-kuru, kışlar ılık-yağışlı.' },
     { id:'ac2', q:'Türkiye\'nin en yüksek dağı?', a:'Ağrı Dağı (5137 m).' },
+    { id:'ac3', q:'Türkiye\'nin coğrafi bölge sayısı ve isimleri?', a:'7 coğrafi bölge: Marmara, Ege, Akdeniz, İç Anadolu, Karadeniz, Doğu Anadolu, Güneydoğu Anadolu.' },
   ],
   // AYT Sosyal 2
   'ayt-tarih2': [
     { id:'as1', q:'1. Dünya Savaşı\'nın başlangıç nedeni?', a:'Sarajevo suikastı (1914) ve ittifak sistemi.' },
     { id:'as2', q:'Soğuk Savaş hangi yıllarda yaşandı?', a:'1947-1991.' },
+    { id:'as3', q:'Fransız Devrimi\'nin temel ilkeleri nelerdir?', a:'Özgürlük (Liberté), Eşitlik (Égalité), Kardeşlik (Fraternité).' },
   ],
   'ayt-cografya2': [
     { id:'aco1', q:'Karadeniz\'in özellikleri?', a:'Yarı kapalı deniz, tuzluluk düşük, Boğazlarla bağlı.' },
     { id:'aco2', q:'Türkiye\'de nüfus yoğunluğu en fazla bölge?', a:'Marmara Bölgesi.' },
+    { id:'aco3', q:'Dünya\'nın en uzun nehri ve kıtası?', a:'Nil Nehri (Afrika) — yaklaşık 6650 km.' },
   ],
   'ayt-felsefe': [
-    { id:'afel1', q:'Kant\'ın kategorik imperatifi?', a:'"Eyleminin ilkesi evrensel yasa olabilsin." ' },
-    { id:'afel2', q:'Varoluşçuluk kurucusu?', a:'Jean-Paul Sartre (ve Kierkegaard öncüsü).' },
+    { id:'afel1', q:'Kant\'ın kategorik imperatifi?', a:'"Eyleminin ilkesi evrensel yasa olabilsin."' },
+    { id:'afel2', q:'Varoluşçuluk kurucusu?', a:'Jean-Paul Sartre (Kierkegaard öncüsü kabul edilir).' },
+    { id:'afel3', q:'Platon\'un "idealar" kuramı nedir?', a:'Gerçek dünyanın duyularla değil akılla kavranabilen değişmez "idea"lardan oluştuğunu savunur.' },
   ],
   'ayt-psikoloji': [
-    { id:'apsi1', q:'Klasik koşullanma nedir?', a:'Pavlov: koşulsuz uyarıcıyla eşleşen koşullu uyarıcı aynı tepkiyi doğurur.' },
-    { id:'apsi2', q:'Savunma mekanizmaları nedir?', a:'Bireyin kaygıya karşı bilinçdışı tepkileri (yansıtma, inkâr, bastırma).' },
+    { id:'apsi1', q:'Klasik koşullanma nedir?', a:'Pavlov: koşulsuz uyarıcıyla eşleşen koşullu uyarıcı zamanla aynı tepkiyi doğurur.' },
+    { id:'apsi2', q:'Savunma mekanizmaları nedir?', a:'Bireyin kaygıya karşı bilinçdışı tepkileri; yansıtma, inkâr, bastırma örneklerdir.' },
+    { id:'apsi3', q:'Maslow\'un ihtiyaçlar hiyerarşisi basamakları?', a:'Fizyolojik → Güvenlik → Ait olma → Saygı → Kendini gerçekleştirme.' },
   ],
   'ayt-sosyoloji': [
-    { id:'asos1', q:'Sosyal tabakalaşma nedir?', a:'Toplumun gelir, statü ve güce göre hiyerarşik katmanlara ayrılması.' },
-    { id:'asos2', q:'Sosyalizasyon nedir?', a:'Bireyin toplumun değer ve normlarını içselleştirme süreci.' },
+    { id:'asos1', q:'Sosyal tabakalaşma nedir?', a:'Toplumun gelir, statü ve güce göre hiyerarşik katmanlara ayrılmasıdır.' },
+    { id:'asos2', q:'Sosyalizasyon nedir?', a:'Bireyin toplumun değer ve normlarını içselleştirme sürecidir.' },
+    { id:'asos3', q:'Durkheim\'a göre "anomi" nedir?', a:'Toplumsal normların çöküşü/belirsizleşmesi sonucu bireyin yönelim kaybetmesidir.' },
   ],
   'ayt-mantik': [
     { id:'aman1', q:'Tümevarım nedir?', a:'Özelden genele ulaşan çıkarım.' },
     { id:'aman2', q:'Tümdengelim nedir?', a:'Genelden özele ulaşan çıkarım.' },
+    { id:'aman3', q:'Kıyas (silogizm) nedir? Örnek ver.', a:'İki önermeden sonuç çıkarmak. Örnek: "Tüm insanlar ölümlüdür. Sokrates insandır. Öyleyse Sokrates ölümlüdür."' },
   ],
   'ayt-din': [
     { id:'adin1', q:'Dört büyük halife sırası?', a:'Hz. Ebubekir, Hz. Ömer, Hz. Osman, Hz. Ali.' },
-    { id:'adin2', q:'Hicret nedir ve tarihi?', a:'Hz. Muhammed\'in Mekke\'den Medine\'ye göçü (622).' },
+    { id:'adin2', q:'Hicret nedir ve tarihi?', a:'Hz. Muhammed\'in Mekke\'den Medine\'ye göçü, 622 yılında gerçekleşmiştir.' },
+    { id:'adin3', q:'İslam\'da "itikat" ile "amel" arasındaki fark?', a:'İtikat: kalple inanç (iman esasları). Amel: bedenle yapılan ibadetler ve davranışlar.' },
   ],
 }
 
