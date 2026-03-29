@@ -319,3 +319,113 @@ export const ROLE_REDIRECTS = {
   support:  '/support',
   customer: '/app',
 }
+
+// ── CSV İmport: Ders adı → slug eşleştirme ───────────────────
+export const DERS_SLUG_MAP = {
+  'TYT|Paragraf':                     'turkce-paragraf',
+  'TYT|Dil Bilgisi':                  'turkce-dilbilgisi',
+  'TYT|Anlam Bilgisi':                'turkce-anlambilgisi',
+  'TYT|Temel Matematik':              'tyt-mat-temel',
+  'TYT|Problemler':                   'tyt-mat-problem',
+  'TYT|Geometri':                     'tyt-mat-geometri',
+  'TYT|Fizik':                        'tyt-fizik',
+  'TYT|Kimya':                        'tyt-kimya',
+  'TYT|Biyoloji':                     'tyt-biyoloji',
+  'TYT|Tarih':                        'tyt-tarih',
+  'TYT|Coğrafya':                     'tyt-cografya',
+  'TYT|Felsefe':                      'tyt-felsefe',
+  'TYT|Din Kültürü ve Ahlak Bilgisi': 'tyt-din',
+  'TYT|Din Kültürü':                  'tyt-din',
+  'AYT|Fizik':                        'ayt-fizik',
+  'AYT|Kimya':                        'ayt-kimya',
+  'AYT|Biyoloji':                     'ayt-biyoloji',
+  'AYT|Matematik':                    'ayt-mat-matematik',
+  'AYT|Geometri':                     'ayt-mat-geometri',
+  'AYT|Türk Dili ve Edebiyatı':       'ayt-edebiyat',
+  'AYT|Edebiyat':                     'ayt-edebiyat',
+  'AYT|Tarih-1':                      'ayt-tarih1',
+  'AYT|Coğrafya-1':                   'ayt-cografya1',
+  'AYT|Tarih-2':                      'ayt-tarih2',
+  'AYT|Coğrafya-2':                   'ayt-cografya2',
+  'AYT|Felsefe':                      'ayt-felsefe',
+  'AYT|Psikoloji':                    'ayt-psikoloji',
+  'AYT|Sosyoloji':                    'ayt-sosyoloji',
+  'AYT|Mantık':                       'ayt-mantik',
+  'AYT|Din Kültürü ve Ahlak Bilgisi': 'ayt-din',
+  'AYT|Din Kültürü':                  'ayt-din',
+}
+
+export function csvRowToSlug(kategori, ders) {
+  const key = `${(kategori || '').trim().toUpperCase()}|${(ders || '').trim()}`
+  return DERS_SLUG_MAP[key] || null
+}
+
+// ── CSV Metni Parse Et ────────────────────────────────────────
+// Sütunlar: A=BAŞLIK  B=SORU  C=AÇIKLAMA  D=KATEGORİ  E=BÖLÜM  F=DERS
+export function parseFlashcardCSV(text) {
+  const sep = text.indexOf(';') !== -1 ? ';' : ','
+  const lines = text.trim().split(/\r?\n/)
+  if (!lines.length) return []
+
+  const HDRS = ['BAŞLIK','BASLIK','SORU','AÇIKLAMA','ACIKLAMA','KATEGORİ','KATEGORI','BÖLÜM','BOLUM','DERS']
+  const firstCells = lines[0].split(sep).map(c => c.trim().replace(/^["']|["']$/g, '').toUpperCase())
+  const hasHeader = firstCells.some(c => HDRS.includes(c))
+  const dataLines = hasHeader ? lines.slice(1) : lines
+
+  const ts = Date.now()
+  const cards = []
+  dataLines.forEach((line, i) => {
+    if (!line.trim()) return
+    const cols = []; let cur = '', inQ = false
+    for (let ci = 0; ci < line.length; ci++) {
+      const ch = line[ci]
+      if ((ch === '"' || ch === "'") && !inQ) inQ = true
+      else if ((ch === '"' || ch === "'") && inQ) inQ = false
+      else if (ch === sep && !inQ) { cols.push(cur.trim()); cur = '' }
+      else cur += ch
+    }
+    cols.push(cur.trim())
+
+    const baslik   = cols[0] || ''
+    const soru     = cols[1] || ''
+    const aciklama = cols[2] || ''
+    const kategori = (cols[3] || '').trim()
+    const bolum    = (cols[4] || '').trim()
+    const ders     = (cols[5] || '').trim()
+
+    if (!soru) return
+    cards.push({
+      id: `csv_${ts}_${i}`, baslik, q: soru,
+      a: aciklama || soru,
+      kategori: kategori.toUpperCase(), bolum, ders,
+      slug: csvRowToSlug(kategori, ders),
+    })
+  })
+  return cards
+}
+
+// ── localStorage: Import edilmiş kartlar ─────────────────────
+const LS_KEY = 'ayttyt_imported_v1'
+
+export function getImportedCards(slug) {
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}')[slug] || [] }
+  catch { return [] }
+}
+
+export function saveImportedCards(cardsBySlug) {
+  try {
+    const merged = { ...JSON.parse(localStorage.getItem(LS_KEY) || '{}') }
+    Object.entries(cardsBySlug).forEach(([slug, newCards]) => {
+      merged[slug] = [...(merged[slug] || []), ...newCards]
+    })
+    localStorage.setItem(LS_KEY, JSON.stringify(merged))
+    return Object.values(cardsBySlug).flat().length
+  } catch { return 0 }
+}
+
+export function getAllImportedCards() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}') }
+  catch { return {} }
+}
+
+export function clearImportedCards() { localStorage.removeItem(LS_KEY) }

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { ThemeToggle } from '../../components/shared'
-import { TYT_BOLUMLER, AYT_BOLUMLER, DECK_CARDS, MIX_ALL, MIX_TYT, MIX_AYT, SRS_COLORS } from '../../data'
+import { TYT_BOLUMLER, AYT_BOLUMLER, DECK_CARDS, MIX_ALL, MIX_TYT, MIX_AYT, SRS_COLORS, getImportedCards } from '../../data'
 import { COURSE_ICON_MAP } from '../../data/courseIcons'
 import toast from 'react-hot-toast'
 
@@ -210,6 +210,11 @@ function MixCard({ icon, label, sub, gradient, border, count, onSelect, compact 
   )
 }
 
+// ── Statik + import edilmiş kartları birleştir ────────────────
+function getDeckCards(slug) {
+  return [...(DECK_CARDS[slug] || []), ...getImportedCards(slug)]
+}
+
 // ── ANA BİLEŞEN ───────────────────────────────────────────────
 export default function CustomerDecks() {
   const [phase, setPhase]               = useState('select')
@@ -270,7 +275,7 @@ export default function CustomerDecks() {
         {/* Tüm bölümü karıştır */}
         <div
           onClick={() => startDeck(
-            selectedBolum.dersler.flatMap(d => DECK_CARDS[d.slug] || []),
+            selectedBolum.dersler.flatMap(d => getDeckCards(d.slug)),
             `${selectedBolum.name} — Tümünü Karıştır`
           )}
           style={{ borderRadius: 14, padding: '14px 16px', marginBottom: 16, cursor: 'pointer',
@@ -295,7 +300,7 @@ export default function CustomerDecks() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {selectedBolum.dersler.map(ders => (
             <div key={ders.slug}
-              onClick={() => startDeck(DECK_CARDS[ders.slug] || [], ders.name)}
+              onClick={() => startDeck(getDeckCards(ders.slug), ders.name)}
               style={{ borderRadius: 12, padding: '14px 16px', cursor: 'pointer',
                 background: 'var(--card)', border: '1px solid var(--border)',
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',

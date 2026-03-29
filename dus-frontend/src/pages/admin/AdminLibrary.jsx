@@ -4,6 +4,7 @@ import { libraryAPI, imageCardsAPI, coursesAPI, cardsAPI } from '../../api/clien
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import styles from '../../styles/shared.module.css'
 import toast from 'react-hot-toast'
+import { parseFlashcardCSV, saveImportedCards } from '../../data'
 
 const FILE_TYPE_ICONS  = { pdf:'📄', excel:'📊', image:'🖼️', word:'📝', other:'📎' }
 const FILE_TYPE_COLORS = {
@@ -53,7 +54,8 @@ function SubTabs({ active, onChange }) {
 // ── DOCUMENTS TAB ─────────────────────────────────────────────────────────────
 function DocumentsTab({ courses }) {
   const qc = useQueryClient()
-  const fileRef = useRef()
+  const fileRef  = useRef()
+  const csvRef   = useRef()
   const [search, setSearch]         = useState('')
   const [filterType, setFilterType] = useState('')
   const [uploadOpen, setUploadOpen] = useState(false)
@@ -63,6 +65,10 @@ function DocumentsTab({ courses }) {
   const [genForm, setGenForm]       = useState({ count:10, difficulty:'orta', focus:'' })
   const [genCards, setGenCards]     = useState(null)
   const [savingCards, setSavingCards] = useState(false)
+  // CSV import state
+  const [csvOpen,    setCsvOpen]    = useState(false)
+  const [csvParsed,  setCsvParsed]  = useState([])   // tüm parse edilmiş kartlar
+  const [csvFileName,setCsvFileName]= useState('')
 
   const { data: docs = [], isLoading } = useQuery({
     queryKey: ['library', search, filterType],
@@ -120,13 +126,152 @@ function DocumentsTab({ courses }) {
     uploadMutation.mutate(fd)
   }
 
+  // ── CSV dosya seçildiğinde parse et ──────────────────────────
+  const handleCsvFile = (e) => {
+    const f = e.target.files[0]
+    if (!f) return
+    setCsvFileName(f.name)
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      const parsed = parseFlashcardCSV(ev.target.result)
+      if (!parsed.length) { toast.error('CSV boş veya okunamadı.'); return }
+      setCsvParsed(parsed)
+      setCsvOpen(true)
+    }
+    reader.readAsText(f, 'UTF-8')
+    e.target.value = ''
+  }
+
+  const handleCsvImport = () => {
+    const matched   = csvParsed.filter(c => c.slug)
+    const unmatched = csvParsed.filter(c => !c.slug)
+    if (!matched.length) { toast.error('Eşleşen ders bulunamadı. KATEGORİ ve DERS sütunlarını kontrol et.'); return }
+
+    // slug'a göre grupla
+    const bySlug = {}
+    matched.forEach(c => {
+      if (!bySlug[c.slug]) bySlug[c.slug] = []
+      bySlug[c.slug].push({ id:c.id, q:c.q, a:c.a, baslik:c.baslik })
+    })
+    const saved = saveImportedCards(bySlug)
+    toast.success(`${saved} kart import edildi!${unmatched.length ? ` (${unmatched.length} satır eşleşmedi)` : ''}`)
+    setCsvOpen(false); setCsvParsed([])
+  }
+
   return (
     <>
-      <div style={{ display:'flex', justifyContent:'flex-end', marginBottom:12 }}>
+      {/* Gizli CSV input */}
+      <input ref={csvRef} type="file" accept=".csv,.txt" style={{ display:'none' }} onChange={handleCsvFile} />
+
+      <div style={{ display:'flex', justifyContent:'flex-end', gap:8, marginBottom:12 }}>
+        <button className={`${styles.btn} ${styles.btnOutline}`}
+          onClick={() => csvRef.current.click()}
+          style={{ display:'flex', alignItems:'center', gap:6 }}>
+          📥 CSV İçe Aktar
+        </button>
         <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={() => setUploadOpen(true)}>
           + Belge Yükle
         </button>
       </div>
+
+      {/* CSV Önizleme Modal */}
+      {csvOpen && (
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.65)', zIndex:200,
+          display:'flex', alignItems:'center', justifyContent:'center' }}
+          onClick={e => { if (e.target===e.currentTarget) setCsvOpen(false) }}>
+          <div style={{ background:'var(--card)', border:'1px solid var(--border)',
+            borderRadius:20, padding:28, width:680, maxWidth:'96vw', maxHeight:'90vh',
+            display:'flex', flexDirection:'column', gap:0 }}>
+
+            {/* Başlık */}
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
+              <div>
+                <div style={{ fontSize:15, fontWeight:800, color:'var(--t1)' }}>📥 CSV Önizleme</div>
+                <div style={{ fontSize:10, color:'var(--t3)', marginTop:2 }}>{csvFileName} — {csvParsed.length} satır</div>
+              </div>
+              <button onClick={() => setCsvOpen(false)}
+                style={{ background:'none', border:'none', color:'var(--t3)', fontSize:18, cursor:'pointer' }}>✕</button>
+            </div>
+
+            {/* Format ipucu */}
+            <div style={{ padding:'8px 12px', borderRadius:10, background:'rgba(0,170,221,.08)',
+              border:'1px solid rgba(0,170,221,.2)', marginBottom:14, fontSize:10, color:'var(--t3)', lineHeight:1.7 }}>
+              <strong style={{ color:'#00AADD' }}>CSV Sütun Formatı:</strong>
+              &nbsp; A=BAŞLIK &nbsp;·&nbsp; B=SORU &nbsp;·&nbsp; C=AÇIKLAMA &nbsp;·&nbsp;
+              D=KATEGORİ (TYT/AYT) &nbsp;·&nbsp; E=BÖLÜM &nbsp;·&nbsp; F=DERS
+            </div>
+
+            {/* Özet sayaçlar */}
+            <div style={{ display:'flex', gap:10, marginBottom:14 }}>
+              {[
+                { label:'Toplam',    val: csvParsed.length,              color:'var(--t2)' },
+                { label:'Eşleşti',  val: csvParsed.filter(c=>c.slug).length,  color:'#10B981' },
+                { label:'Eşleşmedi',val: csvParsed.filter(c=>!c.slug).length, color:'#F5A020' },
+              ].map(s => (
+                <div key={s.label} style={{ flex:1, padding:'8px 10px', borderRadius:10,
+                  background:'var(--input)', border:'1px solid var(--border)', textAlign:'center' }}>
+                  <div style={{ fontSize:18, fontWeight:900, color:s.color }}>{s.val}</div>
+                  <div style={{ fontSize:9, color:'var(--t3)', fontWeight:600 }}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Tablo önizleme */}
+            <div style={{ flex:1, overflowY:'auto', marginBottom:16, maxHeight:320 }}>
+              <table style={{ width:'100%', borderCollapse:'collapse', fontSize:11 }}>
+                <thead>
+                  <tr style={{ background:'var(--input)' }}>
+                    {['#','BAŞLIK','SORU','AÇIKLAMA','KATEGORİ','BÖLÜM','DERS','Slug'].map(h => (
+                      <th key={h} style={{ padding:'6px 8px', textAlign:'left', fontWeight:700,
+                        color:'var(--t3)', borderBottom:'1px solid var(--border)', whiteSpace:'nowrap' }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {csvParsed.slice(0, 50).map((c, i) => (
+                    <tr key={c.id} style={{ borderBottom:'1px solid var(--border)' }}>
+                      <td style={{ padding:'5px 8px', color:'var(--t3)' }}>{i+1}</td>
+                      <td style={{ padding:'5px 8px', color:'var(--t2)', maxWidth:80, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.baslik}</td>
+                      <td style={{ padding:'5px 8px', color:'var(--t1)', maxWidth:140, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.q}</td>
+                      <td style={{ padding:'5px 8px', color:'var(--t2)', maxWidth:120, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{c.a}</td>
+                      <td style={{ padding:'5px 8px', fontWeight:700,
+                        color: c.kategori==='TYT' ? '#4A90D0' : c.kategori==='AYT' ? '#D0506A' : 'var(--t3)' }}>
+                        {c.kategori||'—'}
+                      </td>
+                      <td style={{ padding:'5px 8px', color:'var(--t2)' }}>{c.bolum||'—'}</td>
+                      <td style={{ padding:'5px 8px', color:'var(--t2)' }}>{c.ders||'—'}</td>
+                      <td style={{ padding:'5px 8px' }}>
+                        {c.slug
+                          ? <span style={{ padding:'2px 6px', borderRadius:5, fontSize:9, fontWeight:700,
+                              background:'rgba(16,185,129,.12)', color:'#10B981' }}>✓ {c.slug}</span>
+                          : <span style={{ padding:'2px 6px', borderRadius:5, fontSize:9, fontWeight:700,
+                              background:'rgba(245,160,32,.12)', color:'#F5A020' }}>eşleşmedi</span>
+                        }
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {csvParsed.length > 50 && (
+                <div style={{ textAlign:'center', padding:10, fontSize:10, color:'var(--t3)' }}>
+                  ... ve {csvParsed.length - 50} satır daha
+                </div>
+              )}
+            </div>
+
+            {/* Butonlar */}
+            <div style={{ display:'flex', gap:10 }}>
+              <button className={`${styles.btn} ${styles.btnOutline}`} style={{ flex:1 }}
+                onClick={() => { setCsvOpen(false); setCsvParsed([]) }}>İptal</button>
+              <button className={`${styles.btn} ${styles.btnPrimary}`} style={{ flex:1 }}
+                onClick={handleCsvImport}
+                disabled={!csvParsed.filter(c=>c.slug).length}>
+                {csvParsed.filter(c=>c.slug).length} Kartı Import Et
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <FilterBar searchPlaceholder="Başlık ara..." onSearch={setSearch}
         selects={[{ options:[
