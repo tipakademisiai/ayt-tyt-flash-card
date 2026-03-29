@@ -354,10 +354,6 @@ export const DERS_SLUG_MAP = {
   // AYT Edebiyat-Sosyal 1
   'AYT|TURK DILI VE EDEBIYATI':           'ayt-edebiyat',
   'AYT|EDEBIYAT':                         'ayt-edebiyat',
-  'AYT|TURKCE':                           'ayt-edebiyat',     // BÖLÜM=TÜRKÇE, KATEGORİ=AYT
-  'AYT|PARAGRAF':                         'ayt-edebiyat',     // DERS=PARAGRAF, KATEGORİ=AYT
-  'AYT|DIL BILGISI':                      'ayt-edebiyat',
-  'AYT|ANLAM BILGISI':                    'ayt-edebiyat',
   'AYT|TARIH-1':                          'ayt-tarih1',
   'AYT|TARIH 1':                          'ayt-tarih1',
   'AYT|COGRAFYA-1':                       'ayt-cografya1',
